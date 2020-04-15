@@ -6,6 +6,7 @@ import './index.css';
 import { CPUPerformance } from './cpu-performance';
 import { EditorHistoryUtil } from './utils/editor-history.util';
 import "./RobotEnvironment";
+import { ultrasonicDistance } from './RobotEnvironment';
 
 let editor: any; // eslint-disable-line @typescript-eslint/no-explicit-any
 const BLINK_CODE = `
@@ -72,6 +73,7 @@ void setup() {
 
 }
 void loop() {
+  /*
   //move forward slowly
   setRightWheelSpeed(1);
   setLeftWheelSpeed(1);
@@ -81,7 +83,10 @@ void loop() {
   setRightWheelSpeed(0);
   setLeftWheelSpeed(1);
   delay(5000);
-
+  */
+  int value = analogRead(A0);
+  Serial.println(value);
+  delay(5000);
   
 }`.trim();
 
@@ -120,6 +125,8 @@ const statusLabel = document.querySelector('#status-label');
 const compilerOutputText = document.querySelector('#compiler-output-text');
 const serialOutputText = document.querySelector('#serial-output-text');
 
+
+
 function executeProgram(hex: string) {
   runner = new AVRRunner(hex);
   const MHZ = 16000000;
@@ -132,6 +139,18 @@ function executeProgram(hex: string) {
     rightMotorSpeed = (value >>> 3) & 0x03;
     isrightMotorReverse = ((value >>> 3) & 0x04) ? true : false;
   });
+  //update value of sensor to A0
+  runner.cpu.writeHooks[0x7a] = (value) => {
+    if (value & (1 << 6)) {
+      runner.cpu.data[0x7a] = value & ~(1 << 6); // clear bit - conversion done
+      const analogValue = ultrasonicDistance;
+      runner.cpu.data[0x78] = analogValue & 0xff;
+      runner.cpu.data[0x79] = (analogValue >> 8) & 0x3;
+      return true; // don't update
+    }
+  }
+
+
   runner.usart.onByteTransmit = (value) => {
     serialOutputText.textContent += String.fromCharCode(value);
   };
@@ -142,6 +161,9 @@ function executeProgram(hex: string) {
     statusLabel.textContent = `Simulation time: ${time} (${speed}%)`;
   });
 }
+
+
+
 
 async function compileAndRun() {
   
