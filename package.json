@@ -39,7 +39,7 @@
     "@types/jquery": "^3.3.34",
     "@types/matter-js": "^0.14.2",
     "@wokwi/elements": "^0.7.0",
-    "avr8js": "^0.6.1",
+    "avr8js": "^0.8.0",
     "babel-polyfill": "^6.26.0",
     "matter-js": "^0.14.2"
   }

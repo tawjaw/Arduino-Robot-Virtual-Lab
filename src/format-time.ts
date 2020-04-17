@@ -12,3 +12,8 @@ export function formatTime(seconds: number) {
   const mins = Math.floor(seconds / 60);
   return `${zeroPad(mins, 2)}:${zeroPad(secs, 2)}.${zeroPad(ms, 3)}`;
 }
+
+export function getMilliSecconds(seconds: number){
+  const ms = Math.floor(seconds * 10000) % 10000;
+  return ms/10;
+}

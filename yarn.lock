@@ -962,10 +962,10 @@ autoprefixer@^6.3.1:
     postcss "^5.2.16"
     postcss-value-parser "^3.2.3"
 
-avr8js@^0.6.1:
-  version "0.6.2"
-  resolved "https://registry.yarnpkg.com/avr8js/-/avr8js-0.6.2.tgz#414364993b0c3211336b6039f02522c597396a30"
-  integrity sha512-KHRH7DvoWD9vpx2WV5QR9OWI9m8VcnjnvERmuMbFnXKIPtAoMeUuipShgN+s8FY0vN11mlmCciYhVv7Za/+Kxg==
+avr8js@^0.8.0:
+  version "0.8.0"
+  resolved "https://registry.yarnpkg.com/avr8js/-/avr8js-0.8.0.tgz#296da35d5f90b3e78c853fe310ef722eb647b1a3"
+  integrity sha512-3ZfXUcnvXgAQvHs3PJpZKScF5XbwVUHus8aveF8L1SkjrEbdjzJxlrDrhhHsT91RS+y9HO2OmV5avh5S7Awl0A==
 
 babel-plugin-dynamic-import-node@^2.3.0:
   version "2.3.0"

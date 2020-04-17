@@ -56,7 +56,7 @@ robot.frictionAir = 0.5;
 Body.setPosition(robot, {x: 200, y: 400});
 
 //add obstacle
-var obstacle = Bodies.circle(500, 500, 50);
+var obstacle = Bodies.circle(200, 200, 50);
 Body.setMass(obstacle, 100000000);  //make it very heavy
 
 
@@ -71,31 +71,22 @@ Render.run(render);
 
 
 Events.on(engine, "afterUpdate", function(event) {
-
-    //console.log(robot.mass);
-    const multiplier = 0.001;
+    
+    //console.log(robot.position);
+    const multiplier = 0.005;
     const angle = robot.angle;
-    const x = robot.position.x;
-    const y = robot.position.y;
-    //get center position wrt axis of the robot
-    const xprime = x*Math.cos(angle) + y*Math.sin(angle);
-    const yprime = -x*Math.sin(angle) + y*Math.cos(angle);
-
-    //get value of xprime - w and yprime += h in game axis
-    const w = 0;
-    const h = 20;
-    const leftx = (xprime-w)*Math.cos(angle) - (yprime-h)*Math.sin(angle);
-    const lefty = (yprime-h)*Math.cos(angle)+(xprime-w)*Math.sin(angle);
-    
-    const rightx = (xprime-w)*Math.cos(angle) - (yprime+h)*Math.sin(angle);
-    const righty = (yprime+h)*Math.cos(angle)+(xprime-w)*Math.sin(angle);
-
-    let leftWheelForce = {x: Math.cos(angle)*multiplier*leftMotorSpeed*leftx, y : Math.sin(angle)*multiplier*leftMotorSpeed*lefty};
-    let rightWheelForce = {x: Math.cos(angle)*multiplier*rightMotorSpeed*rightx, y : Math.sin(angle)*multiplier*rightMotorSpeed*righty};
-    
-    Body.applyForce(robot, {x: leftx, y: lefty}, leftWheelForce);
-    Body.applyForce(robot, {x: rightx, y: righty},rightWheelForce);
    
+    const left = getTranformedPointOfBody(robot, 0, -20);
+    const right = getTranformedPointOfBody(robot, 0, 20);
+    
+    
+
+    let leftWheelForce = {x: Math.cos(angle)*multiplier*leftMotorSpeed*left.x, y : Math.sin(angle)*multiplier*leftMotorSpeed*left.y};
+    let rightWheelForce = {x: Math.cos(angle)*multiplier*rightMotorSpeed*right.x, y : Math.sin(angle)*multiplier*rightMotorSpeed*right.y};
+    
+    Body.applyForce(robot, {x: left.x, y: left.y}, leftWheelForce);
+    Body.applyForce(robot, {x: right.x, y: right.y},rightWheelForce);
+    console.log(leftMotorSpeed, rightMotorSpeed);
    /* if (event.timestamp % 5000 < 50)
         console.log(robot.position)*/
 });
