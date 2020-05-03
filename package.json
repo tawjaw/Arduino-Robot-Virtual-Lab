@@ -33,14 +33,14 @@
     "cross-env": "^5.2.0",
     "gh-pages": "^1.2.0",
     "parcel-bundler": "^1.10.0",
-    "typescript": "^2.9.2"
+    "typescript": "^3.8"
   },
   "dependencies": {
+    "@types/jest": "^25.2.1",
     "@types/jquery": "^3.3.34",
     "@types/matter-js": "^0.14.2",
     "@wokwi/elements": "^0.7.0",
-    "avr8js": "^0.8.0",
-    "babel-polyfill": "^6.26.0",
+    "avr8js": "^0.8.4",
     "matter-js": "^0.14.2"
   }
 }

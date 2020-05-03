@@ -17,3 +17,7 @@ export function getMilliSecconds(seconds: number){
   const ms = Math.floor(seconds * 10000) % 10000;
   return ms/10;
 }
+
+export function getMicroSeconds(seconds : number){
+  return Math.floor(seconds * 1000000) % 1000000;
+}

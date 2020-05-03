@@ -27,7 +27,7 @@ export class AVRRunner {
   readonly portD: AVRIOPort;
   readonly usart: AVRUSART;
   readonly speed = 16e6; // 16 MHZ
-  readonly workUnitCycles = 500000;
+  readonly workUnitCycles = 50000;
   readonly taskScheduler = new MicroTaskScheduler();
 
   constructor(hex: string) {

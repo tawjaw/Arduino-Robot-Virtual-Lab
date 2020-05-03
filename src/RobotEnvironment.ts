@@ -1,6 +1,6 @@
 import {Vertices, Engine, Render, Bodies, World, Body, Events, Mouse, MouseConstraint, Composites, Composite, Vector} from "matter-js";
 import {leftMotorSpeed, isleftMotorReverse, rightMotorSpeed, isrightMotorReverse } from "./index.ts"
-import {raycast} from './raycast_es6'
+import {raycast} from './robots/utils/raycast_es6'
 
 export let ultrasonicDistance = 400;
 
