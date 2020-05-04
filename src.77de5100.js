@@ -11182,11 +11182,11 @@ function () {
   };
 
   TwoWheelRobot.prototype.reset = function () {
-    this.onCollision(undefined);
-
     _matterJs.Body.setPosition(this.robot, this.robotInitialPosition);
 
     _matterJs.Body.setAngle(this.robot, this.robotInitialAngle);
+
+    this.onCollision(undefined);
   };
 
   TwoWheelRobot.maxUltrasonicDistance = 200;
@@ -13630,7 +13630,6 @@ function () {
           var event = _c[_b];
 
           if (Math.floor(this.cpu.cycles * 1000000 / this.speed) % event.period === 0) {
-            //console.log(Math.floor(this.cpu.cycles*1000000/this.speed));
             event.eventCall(this.cpu.cycles);
           }
         }
@@ -14811,7 +14810,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "44381" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42145" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
