@@ -51,12 +51,14 @@ export class ArduinoUno{
     {
         const cpuEvent : Event = { period: period, eventCall: eventCall};
         this.cpuEvents.push(cpuEvent);
+        this.runner?.addCPUEvent(cpuEvent);
     }
 
     addCPUEventMicrosecond(period: number, eventCall: any)
     {
         const cpuEvent : Event = { period: period, eventCall: eventCall};
         this.cpuEventsMicrosecond.push(cpuEvent);
+        this.runner?.addCPUEventMicrosecond(cpuEvent);
     }
 
     private updateComponents(value: number, startPin: number, cpuCycles: number) : void {
@@ -71,6 +73,14 @@ export class ArduinoUno{
         this.runner = new AVRRunner(hex);
         const MHZ = 16000000;
       
+        for(const event of this.cpuEventsMicrosecond)
+            this.runner.addCPUEventMicrosecond(event);
+        for(const event of this.cpuEvents)
+            this.runner.addCPUEvent(event);
+        
+        for(const connection of this.pinConnections)
+            connection.component.reset();
+
         this.runner.portD.addListener(value => {
             
             this.updateComponents(value, 0, this.runner.cpu.cycles);
@@ -79,7 +89,6 @@ export class ArduinoUno{
             this.updateComponents(value, 8, this.runner.cpu.cycles);
         });
     
-        //this.runner.cpu.writeData()
         this.runner.usart.onByteTransmit = (value) => {
             this.serialOutput += String.fromCharCode(value);
             if(this.serialOutputElement)
@@ -89,54 +98,14 @@ export class ArduinoUno{
 
     
         const cpuPerf = new CPUPerformance(this.runner.cpu, MHZ);
-        let cpuTimeMS = 0;
-        let cpuTimeMicroS = 0;
+    
         this.runner.execute((cpu) => {
-            if(Math.floor(cpu.cycles*1000/MHZ) !== cpuTimeMS)
-            {
-                cpuTimeMS = Math.floor(cpu.cycles*1000/MHZ);
+           
                 const time = formatTime(cpu.cycles / MHZ);
                 const speed = (cpuPerf.update() * 100).toFixed(0);
-                //console.log(cpu.cycles, time);
                 if(this.timeLabelElement)
                     this.timeLabelElement.textContent = `Simulation time: ${time} (${speed}%)`;
-            
-                
 
-                for(const event of this.cpuEvents)
-                {
-                    //console.log(event);
-                    //console.log(Math.floor(cpu.cycles*1000/MHZ),Math.floor(cpu.cycles*1000/MHZ) % event.period);
-                    if(Math.floor(cpu.cycles*1000/MHZ) % event.period === 0) //events by ms
-                    { 
-                    // console.log(event);
-                        //console.log(Math.floor(cpu.cycles*10000/MHZ),Math.floor(cpu.cycles*10000/MHZ) % event.period);
-                        event.eventCall(cpu.cycles);
-
-                    }   
-                }
-            }
-
-            if(Math.floor(cpu.cycles*1000000/MHZ) !== cpuTimeMicroS)
-            {
-                cpuTimeMicroS = Math.floor(cpu.cycles*1000000/MHZ);
-
-
-                for(const event of this.cpuEventsMicrosecond)
-                {
-                   
-                    if(Math.floor(cpu.cycles*1000000/MHZ) % event.period < 5) //events by microsecond TODO add error maybe?
-                    { 
-                        //console.log(cpu.cycles*1000000/MHZ);
-
-                        event.eventCall(cpu.cycles);
-
-                    }   
-                }
-            }
-    
-    
-      
         });
     }
 
@@ -179,8 +148,3 @@ export class ArduinoUno{
 
 }
 
-
-//turn pin on 
-//
-//turn pin off
-//runner.cpu.data[portDConfig.PIN] |= 1 << pinIndex;

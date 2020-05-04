@@ -7,7 +7,7 @@ export function createPartCircle(x: number, y: number, sides: number, radius: nu
   
     var path = '';
     path +=  x.toFixed(3) + ' ' + y.toFixed(3) + ' '
-    var offset = -Math.PI/(4*sides);
+    var offset = -Math.PI/(6*sides);
     for(var i = 0; i < sides; i += 1)
     {
       var angle = angleOffset+ i*offset;

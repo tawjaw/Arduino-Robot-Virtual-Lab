@@ -1,6 +1,5 @@
 import {TwoWheelRobot} from "../robots/TwoWheelRobot";
 import {ArduinoUno, Servo, UltrasonicSensor} from "../Hardware";
-import { ultrasonicDistance } from "../RobotEnvironment";
 
 
 export class TwoServoRobot {
@@ -27,27 +26,35 @@ export class TwoServoRobot {
         //add arduino events
         //update the wheel speeds from servo components
         this.arduino.addCPUEvent(5, () => {
-            const leftServoSpeed = this.servoLeft.getWidthOfLastPulse() - 1.4;
-            const rightServoSpeed = this.servoRight.getWidthOfLastPulse() - 1.4;
+            const leftServoSpeed = (this.servoLeft.getWidthOfLastPulse() - 1.4)/5;
+            const rightServoSpeed = (this.servoRight.getWidthOfLastPulse() - 1.4)/5;
             this.environment?.setSpeeds(leftServoSpeed, rightServoSpeed);
         })
         
         //apply the force on the wheels
-        this.arduino.addCPUEvent(50, () => {
+        this.arduino.addCPUEvent(100, () => {
             this.environment?.applyForces();
         })
-        this.arduino.addCPUEventMicrosecond(50, (cpuCycles : number) => {
+        this.arduino.addCPUEvent(100, () => {
+            this.environment?.tick(100);
+        })
+        this.arduino.addCPUEventMicrosecond(5, (cpuCycles : number) => {
             if(this.environment)
                 this.ultrasonic.setDistanceOfObstacle(this.environment.ultrasonicSensorDistance);
             this.arduino?.writeDigitalPin(this.ultrasonic.getEchoPin(), this.ultrasonic.getEchoPinState(cpuCycles));
         })
+
+        /* 
         this.arduino.addCPUEvent(1000, () =>{
            console.log(this.environment?.rightWheelSpeed, this.environment?.leftWheelSpeed);
         })
+        */
     }
 
     run(hex: string)
     {
+        this.environment?.reset();
+        this.environment?.tick(100);
         this.arduino?.executeProgram(hex);
     }
     

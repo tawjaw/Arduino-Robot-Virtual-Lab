@@ -18,5 +18,5 @@ export abstract class Component{
     getPinState() : boolean { return this.pinState;}
     
     abstract update(pinState : boolean, cpuCycles : number) : void;
-
+    abstract reset() : void;
 }

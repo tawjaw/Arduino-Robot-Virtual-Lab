@@ -38,4 +38,10 @@ export class Servo extends Component{
         this.pinState = pinState;
         
     }
+
+    reset() 
+    {
+        this.widthOfLastPulse = 1.4;
+        this.startingCpuCyclesOfPulse = -1;
+    }
 }

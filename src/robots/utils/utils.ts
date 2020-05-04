@@ -1,3 +1,5 @@
+import {raycast} from "./raycast_es6";
+import {Body, Bodies, World} from "matter-js";
 
   //taken from  Matter.js library 
   export function commonExtend(obj : any, deep : any, options : any) {
@@ -53,4 +55,31 @@ export function getTranformedPoint(position : any, angle : number, offsetx : num
   }
 
 
+}
+
+
+export function findMinimumDistanceToObstacle(startingPosition: any,startingAngle : number, radius : number, obstacles:Array<Body>)
+{
+    let minDistance = radius + 10000;
+   
+    const numberOfRays = 45;
+
+    for(var i =0; i < numberOfRays; i+=1)
+    {
+      const endPoint = getTranformedPoint(startingPosition, startingAngle-i*Math.PI/180, 220,0);
+      //var newBody =  Bodies.circle(endPoint.x, endPoint.y, 5,{isSensor : true, label:"test"});
+        //World.add(engine.world, [newBody]);
+      var rays = raycast(obstacles,startingPosition, endPoint, true);
+      if(rays.length != 0)
+      {
+        const nearestPoint = rays[0].point;
+        
+        const distance = Math.sqrt((nearestPoint.x-startingPosition.x)*(nearestPoint.x-startingPosition.x)+
+                                   (nearestPoint.y-startingPosition.y)*(nearestPoint.y-startingPosition.y));
+        if(distance < minDistance)  minDistance = distance;
+      }
+    }
+
+    return minDistance;
+    
 }

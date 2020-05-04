@@ -25,6 +25,9 @@ void setup() {
   Serial.begin(115200);
   leftservo.attach(9);  
   rightservo.attach(10);
+  
+  pinMode(pingPin, OUTPUT);
+  pinMode(echoPin, INPUT);
 
 }
 
@@ -61,13 +64,11 @@ void loop() {
 void printDistance()
 {
   long duration, inches, cm;
-  pinMode(pingPin, OUTPUT);
   digitalWrite(pingPin, LOW);
   delayMicroseconds(2);
   digitalWrite(pingPin, HIGH);
   delayMicroseconds(10);
   digitalWrite(pingPin, LOW);
-  pinMode(echoPin, INPUT);
   duration = pulseIn(echoPin, HIGH);
   inches = microsecondsToInches(duration);
   cm = microsecondsToCentimeters(duration);
@@ -85,6 +86,7 @@ long microsecondsToInches(long microseconds) {
 long microsecondsToCentimeters(long microseconds) {
   return microseconds / 29 / 2;
 }
+    
 `,
     language: 'cpp',
     minimap: { enabled: false }

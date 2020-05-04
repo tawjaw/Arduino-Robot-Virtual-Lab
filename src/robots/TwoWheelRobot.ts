@@ -1,6 +1,6 @@
-import {Body, Engine, Render, Bodies, World, Vector, Runner} from "matter-js";
+import {Body, Engine, Render, Bodies, World, Vector, Runner, Events, Mouse, MouseConstraint} from "matter-js";
 import {createPartCircle} from "./utils/CustomBodies"
-import { getTranformedPoint } from "./utils/utils";
+import { getTranformedPoint, findMinimumDistanceToObstacle } from "./utils/utils";
 
 
 export class TwoWheelRobot {
@@ -12,7 +12,9 @@ export class TwoWheelRobot {
     robotBody : Body;
     leftWheelBody : Body;
     rightWheelBody : Body;
-   
+    robotInitialPosition : Vector;
+    robotInitialAngle : number;
+
     ultrasonicSensor : Body;
     static readonly maxUltrasonicDistance = 200;
     ultrasonicSensorDistance : number;
@@ -26,7 +28,7 @@ export class TwoWheelRobot {
     leftWheelSpeed : number;
     rightWheelSpeed : number;
 
-    constructor(canvas:any) {
+    constructor(canvas:any, robotInitialPosition : Vector = { x: 50, y: 100}, robotInitialAngle : number = 0) {
         this._canvas = canvas;
         this._engine = Engine.create();
 
@@ -39,17 +41,12 @@ export class TwoWheelRobot {
             options: {
               width: 800,
               height: 800,
-              wireframes: false,
-              showAxes: true,
-              showPositions: true
+              wireframes: false
             }
           });
         
         this._runner = Runner.create();
-        //this._render.options.showAxes: true;
-        //this._render.options.showPositions: true;
-        //this._render.options.show
-        //initialize
+       
         this.obstacles = [];
         this.coins = [];
         this.rightWheelSpeed = 0;
@@ -61,7 +58,7 @@ export class TwoWheelRobot {
         this.leftWheelBody = Bodies.rectangle(88, 82, 20, 6);
         this.rightWheelBody = Bodies.rectangle(88, 118, 20, 6);
         //create the ultrasonic sensor body
-        this.ultrasonicSensor = createPartCircle(115,-30, 50,200, -3*Math.PI/8,{});
+        this.ultrasonicSensor = createPartCircle(110,-30, 50,200, -3*Math.PI/7,{});
         this.ultrasonicSensor.isSensor = true;
         this.ultrasonicSensor.render.opacity = 0.2;
         this.ultrasonicSensor.mass = 0;
@@ -70,13 +67,62 @@ export class TwoWheelRobot {
         this.robot = Body.create({parts: [this.ultrasonicSensor,this.robotBody, this.leftWheelBody, this.rightWheelBody]});
         this.robot.frictionAir = 0.5;
         Body.setMass(this.robot, 1000);
-        Body.setPosition(this.robot, {x: 300, y: 300});
-        World.add(this._engine.world, [this.robot]);
+        this.robotInitialPosition = robotInitialPosition;
+        this.robotInitialAngle = robotInitialAngle; 
+
+
+        //add circle obstacle for testing
+        //add obstacle
+    /* var obstacle = Bodies.circle(200, 200, 50);
+    Body.setMass(obstacle, 100000000);  //make it very heavy
+    this.obstacles.push(obstacle);
+     */
+        World.add(this._engine.world, [this.robot, ]);//obstacle]);
 
         Render.run(this._render); 
-        Engine.run(this._engine);
+
+
+        //add collision events to calculate obstacle distance
+        let self = this;
+        Events.on(this._engine, 'collisionActive',function(event) {self.onCollision(event);});
+        Events.on(this._engine, "collisionEnd", function(event) {
+            self.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
+        })
+
+
+        /* //add mouse for testing
+            // add mouse control
+        var mouse = Mouse.create(this._render.canvas),
+        mouseConstraint = MouseConstraint.create(this._engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false
+                }
+            }
+        });
+
+        World.add(this._engine.world, mouseConstraint);
+
+        // keep the mouse in sync with rendering
+        this._render.mouse = mouse;
+
+        */    
     }
 
+    private onCollision(event)
+    {   
+        if(this.robot)
+        {
+        const sensorStartingPoint = getTranformedPoint(this.robot.position, 0, 15, -10);   
+        const startingAngle = this.robot.angle - 5*Math.PI/12;
+        this.ultrasonicSensorDistance = findMinimumDistanceToObstacle(sensorStartingPoint, startingAngle, 200, this.obstacles);
+        if(this.ultrasonicSensorDistance > TwoWheelRobot.maxUltrasonicDistance) 
+            this.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
+        
+        }
+    }
     addObstacleRectangle(posX : number, posY : number, width : number, height : number, color = "grey", label = "rectangle" ) : void {
         const obstacle = Bodies.rectangle(posX, posY, width, height, { isStatic: true, label: label, render: {fillStyle : color} });
         this.obstacles.push(obstacle);
@@ -89,8 +135,8 @@ export class TwoWheelRobot {
     
     applyForces() : void {
 
-    const leftForcePosition = getTranformedPoint(this.robotBody.position, this.robot.angle, -10, -5000);
-    const rightForcePosition = getTranformedPoint(this.robotBody.position, this.robot.angle, -10, 5000);
+    const leftForcePosition = getTranformedPoint(this.robotBody.position, this.robot.angle, -10, -500);
+    const rightForcePosition = getTranformedPoint(this.robotBody.position, this.robot.angle, -10, 500);
     
     let leftWheelForce = Vector.create(TwoWheelRobot.forceMultiplier*Math.abs(this.leftWheelSpeed), 0);
     leftWheelForce = Vector.rotate(leftWheelForce, this.robot.angle);
@@ -108,13 +154,27 @@ export class TwoWheelRobot {
     
     }
 
+    setRobotPosition(position : Vector) : void
+    {
+        Body.setPosition(this.robot, position);
+    }
+    
+    setRobotInitialPosition(position : Vector) : void
+    {
+
+    }
     run() {
         Engine.run(this._engine);
-        Render.run(this._render); 
     }
 
     tick(period : number) {
         Engine.update(this._engine, period);
-        //Runner.tick(this._runner, this._engine, 1);
+    }
+
+    reset()
+    {
+        this.onCollision(undefined);
+        Body.setPosition(this.robot, this.robotInitialPosition);
+        Body.setAngle(this.robot, this.robotInitialAngle);
     }
 }
