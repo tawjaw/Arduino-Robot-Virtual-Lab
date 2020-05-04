@@ -89,7 +89,6 @@ export class AVRRunner {
               
               if(Math.floor(this.cpu.cycles*1000000/this.speed) % event.period === 0) 
               { 
-                //console.log(Math.floor(this.cpu.cycles*1000000/this.speed));
             
                   event.eventCall(this.cpu.cycles);
 

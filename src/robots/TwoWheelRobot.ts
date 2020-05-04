@@ -173,8 +173,9 @@ export class TwoWheelRobot {
 
     reset()
     {
-        this.onCollision(undefined);
         Body.setPosition(this.robot, this.robotInitialPosition);
         Body.setAngle(this.robot, this.robotInitialAngle);
+        this.onCollision(undefined);
+
     }
 }
