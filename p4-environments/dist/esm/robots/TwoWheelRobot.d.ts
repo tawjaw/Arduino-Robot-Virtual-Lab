@@ -1,0 +1,35 @@
+import { Body, Vector } from "matter-js";
+export declare class TwoWheelRobot {
+    private _canvas;
+    private _engine;
+    private _render;
+    private _runner;
+    robotBody: Body;
+    leftWheelBody: Body;
+    rightWheelBody: Body;
+    robotInitialPosition: Vector;
+    robotInitialAngle: number;
+    ultrasonicSensor: Body;
+    static readonly maxUltrasonicDistance = 200;
+    ultrasonicSensorDistance: number;
+    robot: Body;
+    obstacles: Array<Body>;
+    coins: Array<Body>;
+    removedCoins: Array<Body>;
+    static readonly forceMultiplier = 1;
+    leftWheelSpeed: number;
+    rightWheelSpeed: number;
+    background: string;
+    constructor(canvas: any, robotInitialPosition?: Vector, robotInitialAngle?: number, background?: string);
+    private onCollision;
+    private updateUltrasonicSensor;
+    addObstacleRectangle(posX: number, posY: number, width: number, height: number, color?: string): void;
+    addCoin(posX: number, posY: number): void;
+    setSpeeds(left: number, right: number): void;
+    applyForces(): void;
+    setRobotPosition(position: Vector): void;
+    setRobotInitialPosition(position: Vector): void;
+    run(): void;
+    tick(period: number): void;
+    reset(): void;
+}

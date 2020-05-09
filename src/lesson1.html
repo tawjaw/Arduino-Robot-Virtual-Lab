@@ -11,8 +11,7 @@
   <title>Simple Sidebar - Start Bootstrap Template</title>
 
   <!-- Bootstrap core CSS -->
-  <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!-- Custom styles for this template -->
   <link href="css/simple-sidebar.css" rel="stylesheet">
 
@@ -26,13 +25,17 @@
     <div class="bg-light border-right" id="sidebar-wrapper">
       <div class="sidebar-heading">Start Bootstrap </div>
       <div class="list-group list-group-flush">
-        <a href="#" class="list-group-item list-group-item-action bg-light">Introduction</a>
-        <a href="lesson1.html" class="list-group-item list-group-item-action bg-light">Move Forward</a>
+        <a href="index.html" class="list-group-item list-group-item-action bg-light">Introduction</a>
+        <a href="#" class="list-group-item list-group-item-action bg-light">Move Forward</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Rotate</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Serial Ultrasonic</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Follow Wall</a>
         <a href="#" class="list-group-item list-group-item-action bg-light">Challenge</a>
-      </div>
+
+        <img src="https://www.dawsoncollege.qc.ca/communications-office/wp-content/uploads/sites/132/Dawson_Logos_MAIN_01_Web-800x332.png" width=200 style="margin-left: auto;
+        margin-right: auto; margin-top: 30px;
+        display: block;">
+    </div>
     </div>
     <!-- /#sidebar-wrapper -->
 
@@ -70,10 +73,28 @@
       </nav>
 
       <div class="container-fluid">
-        <h1 class="mt-4">Introduction</h1>
-        <p>The starting state of the menu will appear collapsed on smaller screens, and will appear non-collapsed on larger screens. When toggled using the button below, the menu will change.</p>
-        <p>Make sure to keep all page content within the <code>#page-content-wrapper</code>. The top navbar is optional, and just for demonstration. Just create an element with the <code>#menu-toggle</code> ID which will toggle the menu when clicked.</p>
-      </div>
+        <h1 class="mt-4">Lesson One</h1>
+        
+        <div class="row">
+            
+            <div class="col app-container">
+      
+            <p4-arduino-ide-container id='ide-container'>
+              <div class="code-editor"></div>
+              <div class="compiler-output">
+                <pre id="compiler-output-text"></pre>
+                <pre id="serial-output-text"></pre>
+              </div>
+            </p4-arduino-ide-container>
+          </div>
+          <div class="col">
+      
+            <canvas class="robot-environment" id="world"></canvas>
+            </div>
+        </div>
+          
+        </div>
+            <script src="//cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.js"></script>
     </div>
     <!-- /#page-content-wrapper -->
 
@@ -83,6 +104,8 @@
   <!-- Bootstrap core JavaScript -->
   <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="main.ts"></script>
+  <script src="lesson1.ts"></script>
+
   <!-- Menu Toggle Script -->
   <script>
 
