@@ -13847,6 +13847,50 @@ var CPUPerformance = /*#__PURE__*/function () {
 }();
 
 exports.CPUPerformance = CPUPerformance;
+},{}],"../node_modules/@p4labs/hardware/dist/esm/Component.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Component = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Component = /*#__PURE__*/function () {
+  function Component(pin, label) {
+    _classCallCheck(this, Component);
+
+    this.pin = pin;
+    this.label = label;
+    this.pinState = false;
+  }
+
+  _createClass(Component, [{
+    key: "getLabel",
+    value: function getLabel() {
+      return this.label;
+    }
+  }, {
+    key: "getPin",
+    value: function getPin() {
+      return this.pin;
+    }
+  }, {
+    key: "getPinState",
+    value: function getPinState() {
+      return this.pinState;
+    }
+  }]);
+
+  return Component;
+}();
+
+exports.Component = Component;
 },{}],"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js":[function(require,module,exports) {
 "use strict";
 
@@ -13894,9 +13938,27 @@ var _execute = require("./execute");
 
 var _cpuPerformance = require("./cpu-performance");
 
+var _Component2 = require("../Component");
+
 var _formatTime = require("./format-time");
 
 var _avr8js = require("avr8js");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -13921,6 +13983,7 @@ var ArduinoUno = /*#__PURE__*/function () {
     this.serialOutput = "";
     this.serialOutputElement = null;
     this.arduinoContainer = null;
+    this.unoElement = null;
   }
 
   _createClass(ArduinoUno, [{
@@ -13932,6 +13995,11 @@ var ArduinoUno = /*#__PURE__*/function () {
     key: "setTimeLabelElement",
     value: function setTimeLabelElement(arduinoContainer) {
       this.arduinoContainer = arduinoContainer;
+    }
+  }, {
+    key: "setUnoElement",
+    value: function setUnoElement(arduinoUnoElement) {
+      this.unoElement = arduinoUnoElement;
     }
   }, {
     key: "getSerialOutput",
@@ -13947,10 +14015,10 @@ var ArduinoUno = /*#__PURE__*/function () {
       }; //TODO can we allow multiple components to be connected to the same pin?
 
       /*for(const connection of this.digitalPinConnections)
-      {
-          if(connection.pin === pin)
-              return false;
-      }*/
+          {
+              if(connection.pin === pin)
+                  return false;
+          }*/
 
       this.pinConnections.push(connection);
       return true;
@@ -14007,6 +14075,10 @@ var ArduinoUno = /*#__PURE__*/function () {
 
       this.runner = new _execute.AVRRunner(hex);
       var MHZ = 16000000;
+
+      if (this.unoElement) {
+        this.addConnection(13, new pin13(13, "led", this.unoElement));
+      }
 
       var _iterator2 = _createForOfIteratorHelper(this.cpuEventsMicrosecond),
           _step2;
@@ -14104,51 +14176,37 @@ var ArduinoUno = /*#__PURE__*/function () {
 }();
 
 exports.ArduinoUno = ArduinoUno;
-},{"./execute":"../node_modules/@p4labs/hardware/dist/esm/Uno/execute.js","./cpu-performance":"../node_modules/@p4labs/hardware/dist/esm/Uno/cpu-performance.js","./format-time":"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js","avr8js":"../node_modules/avr8js/dist/esm/index.js"}],"../node_modules/@p4labs/hardware/dist/esm/Component.js":[function(require,module,exports) {
-"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Component = void 0;
+var pin13 = /*#__PURE__*/function (_Component) {
+  _inherits(pin13, _Component);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  var _super = _createSuper(pin13);
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  function pin13(pin, label, unoElement) {
+    var _this2;
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+    _classCallCheck(this, pin13);
 
-var Component = /*#__PURE__*/function () {
-  function Component(pin, label) {
-    _classCallCheck(this, Component);
-
-    this.pin = pin;
-    this.label = label;
-    this.pinState = false;
+    _this2 = _super.call(this, pin, label);
+    _this2.unoElement = unoElement;
+    return _this2;
   }
 
-  _createClass(Component, [{
-    key: "getLabel",
-    value: function getLabel() {
-      return this.label;
+  _createClass(pin13, [{
+    key: "update",
+    value: function update(pinState, cpuCycles) {
+      this.unoElement.led13 = pinState;
     }
   }, {
-    key: "getPin",
-    value: function getPin() {
-      return this.pin;
-    }
-  }, {
-    key: "getPinState",
-    value: function getPinState() {
-      return this.pinState;
+    key: "reset",
+    value: function reset() {
+      this.unoElement.led13 = false;
     }
   }]);
 
-  return Component;
-}();
-
-exports.Component = Component;
-},{}],"../node_modules/@p4labs/hardware/dist/esm/Servo.js":[function(require,module,exports) {
+  return pin13;
+}(_Component2.Component);
+},{"./execute":"../node_modules/@p4labs/hardware/dist/esm/Uno/execute.js","./cpu-performance":"../node_modules/@p4labs/hardware/dist/esm/Uno/cpu-performance.js","../Component":"../node_modules/@p4labs/hardware/dist/esm/Component.js","./format-time":"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js","avr8js":"../node_modules/avr8js/dist/esm/index.js"}],"../node_modules/@p4labs/hardware/dist/esm/Servo.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14531,7 +14589,7 @@ var Robots;
     Arduino.TwoServoRobot = _arduinoenvironments.TwoServoRobot;
   })(Arduino = Robots.Arduino || (Robots.Arduino = {}));
 })(Robots = exports.Robots || (exports.Robots = {}));
-},{"./robots":"../node_modules/@p4labs/environments/dist/esm/robots/index.js","./ArduinoRobotEnvironment":"../node_modules/@p4labs/environments/dist/esm/ArduinoRobotEnvironment/index.js"}],"compile.ts":[function(require,module,exports) {
+},{"./robots":"../node_modules/@p4labs/environments/dist/esm/robots/index.js","./ArduinoRobotEnvironment":"../node_modules/@p4labs/environments/dist/esm/ArduinoRobotEnvironment/index.js"}],"ts/compile.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -14680,7 +14738,7 @@ var __generator = this && this.__generator || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-var url = 'https://hexi.wokwi.com';
+var url = "https://hexi.wokwi.com";
 
 function buildHex(source) {
   return __awaiter(this, void 0, void 0, function () {
@@ -14690,12 +14748,12 @@ function buildHex(source) {
         case 0:
           return [4
           /*yield*/
-          , fetch(url + '/build', {
-            method: 'POST',
-            mode: 'cors',
-            cache: 'no-cache',
+          , fetch(url + "/build", {
+            method: "POST",
+            mode: "cors",
+            cache: "no-cache",
             headers: {
-              'Content-Type': 'application/json'
+              "Content-Type": "application/json"
             },
             body: JSON.stringify({
               sketch: source
@@ -41216,79 +41274,7 @@ Object.defineProperty(exports, "ArduinoIDEContainer", {
 });
 
 var _arduinoIdeContainerElement = require("./arduino-ide-container-element");
-},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"../node_modules/parcel-bundler/src/builtins/bundle-url.js":[function(require,module,exports) {
-var bundleURL = null;
-
-function getBundleURLCached() {
-  if (!bundleURL) {
-    bundleURL = getBundleURL();
-  }
-
-  return bundleURL;
-}
-
-function getBundleURL() {
-  // Attempt to find the URL of the current script and use that as the base URL
-  try {
-    throw new Error();
-  } catch (err) {
-    var matches = ('' + err.stack).match(/(https?|file|ftp|chrome-extension|moz-extension):\/\/[^)\n]+/g);
-
-    if (matches) {
-      return getBaseURL(matches[0]);
-    }
-  }
-
-  return '/';
-}
-
-function getBaseURL(url) {
-  return ('' + url).replace(/^((?:https?|file|ftp|chrome-extension|moz-extension):\/\/.+)\/[^/]+$/, '$1') + '/';
-}
-
-exports.getBundleURL = getBundleURLCached;
-exports.getBaseURL = getBaseURL;
-},{}],"../node_modules/parcel-bundler/src/builtins/css-loader.js":[function(require,module,exports) {
-var bundle = require('./bundle-url');
-
-function updateLink(link) {
-  var newLink = link.cloneNode();
-
-  newLink.onload = function () {
-    link.remove();
-  };
-
-  newLink.href = link.href.split('?')[0] + '?' + Date.now();
-  link.parentNode.insertBefore(newLink, link.nextSibling);
-}
-
-var cssTimeout = null;
-
-function reloadCSS() {
-  if (cssTimeout) {
-    return;
-  }
-
-  cssTimeout = setTimeout(function () {
-    var links = document.querySelectorAll('link[rel="stylesheet"]');
-
-    for (var i = 0; i < links.length; i++) {
-      if (bundle.getBaseURL(links[i].href) === bundle.getBundleURL()) {
-        updateLink(links[i]);
-      }
-    }
-
-    cssTimeout = null;
-  }, 50);
-}
-
-module.exports = reloadCSS;
-},{"./bundle-url":"../node_modules/parcel-bundler/src/builtins/bundle-url.js"}],"index.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"lesson1.ts":[function(require,module,exports) {
+},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/servo-1.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -41446,22 +41432,20 @@ var compile_1 = require("./compile");
 
 require("@p4labs/elements");
 
-require("./index.css");
-
 var editor; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-var simulationStatus = 'off';
+var simulationStatus = "off";
 
 window.require.config({
   paths: {
-    vs: 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs'
+    vs: "https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs"
   }
 });
 
-window.require(['vs/editor/editor.main'], function () {
-  editor = monaco.editor.create(document.querySelector('.code-editor'), {
+window.require(["vs/editor/editor.main"], function () {
+  editor = monaco.editor.create(document.querySelector(".code-editor"), {
     value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \n\nconst int pingPin = 11; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 12; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  Serial.begin(115200);\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n  printDistance();\n\n  //move forward fast\n  leftservo.write(170);\n  rightservo.write(10);\n  delay(7000);\n\n  printDistance();\n  //rotate right fast\n  leftservo.write(170);\n  rightservo.write(170);\n  delay(3000);\n\n  printDistance();\n  //move forward fast\n  leftservo.write(170);\n  rightservo.write(10);\n  delay(8000);\n\n  printDistance();\n  //stop\n  leftservo.write(90);\n  rightservo.write(90);\n}\n\nvoid loop() {\n\n}\n\nvoid printDistance()\n{\n  long duration, inches, cm;\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  duration = pulseIn(echoPin, HIGH);\n  inches = microsecondsToInches(duration);\n  cm = microsecondsToCentimeters(duration);\n  Serial.print(inches);\n  Serial.print(\"in, \");\n  Serial.print(cm);\n  Serial.print(\"cm\");\n  Serial.println();\n\n}\nlong microsecondsToInches(long microseconds) {\n  return microseconds / 74 / 2;\n}\n\nlong microsecondsToCentimeters(long microseconds) {\n  return microseconds / 29 / 2;\n}\n \n",
-    language: 'cpp',
+    language: "cpp",
     minimap: {
       enabled: false
     },
@@ -41469,20 +41453,20 @@ window.require(['vs/editor/editor.main'], function () {
   });
 });
 
-var statusLabel = document.querySelector('#status-label');
-var compilerOutputText = document.querySelector('#compiler-output-text');
-var serialOutputText = document.querySelector('#serial-output-text');
-var arduinoContainer = document.querySelector('#ide-container');
-arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener('_status-change', function (e) {
+var statusLabel = document.querySelector("#status-label");
+var compilerOutputText = document.querySelector("#compiler-output-text");
+var serialOutputText = document.querySelector("#serial-output-text");
+var arduinoContainer = document.querySelector("#ide-container");
+arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener("_status-change", function (e) {
   return handleIDEStatusChange(e);
 });
 
 function handleIDEStatusChange(e) {
   var status = e.detail.status;
 
-  if (status === 'compiling' && simulationStatus !== 'compiling') {
+  if (status === "compiling" && simulationStatus !== "compiling") {
     compileAndRun();
-  } else if (status === 'off' && simulationStatus !== 'off') {
+  } else if (status === "off" && simulationStatus !== "off") {
     stopCode();
   }
 
@@ -41490,18 +41474,18 @@ function handleIDEStatusChange(e) {
 } //set up robot environment
 
 
-var canvas = document.getElementById('world');
-var robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, 'imgs/room-background.jpg');
+var canvas = document.getElementById("world");
+var robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, "imgs/room-background.jpg");
 (_a = robot.environment) === null || _a === void 0 ? void 0 : _a.addObstacleRectangle(400, 50, 800, 20, "grey");
 (_b = robot.environment) === null || _b === void 0 ? void 0 : _b.addCoin(150, 100);
 (_c = robot.environment) === null || _c === void 0 ? void 0 : _c.addCoin(300, 100);
 (_d = robot.environment) === null || _d === void 0 ? void 0 : _d.addCoin(500, 300);
 (_e = robot.environment) === null || _e === void 0 ? void 0 : _e.addCoin(500, 400);
 (_f = robot.environment) === null || _f === void 0 ? void 0 : _f.addCoin(500, 600);
-var runButton = document.querySelector('#run-button');
-runButton === null || runButton === void 0 ? void 0 : runButton.addEventListener('click', compileAndRun);
-var stopButton = document.querySelector('#stop-button');
-stopButton === null || stopButton === void 0 ? void 0 : stopButton.addEventListener('click', stopCode);
+var runButton = document.querySelector("#run-button");
+runButton === null || runButton === void 0 ? void 0 : runButton.addEventListener("click", compileAndRun);
+var stopButton = document.querySelector("#stop-button");
+stopButton === null || stopButton === void 0 ? void 0 : stopButton.addEventListener("click", stopCode);
 
 function compileAndRun() {
   return __awaiter(this, void 0, void 0, function () {
@@ -41509,7 +41493,7 @@ function compileAndRun() {
     return __generator(this, function (_a) {
       switch (_a.label) {
         case 0:
-          if (serialOutputText) serialOutputText.textContent = '';
+          if (serialOutputText) serialOutputText.textContent = "";
           _a.label = 1;
 
         case 1:
@@ -41522,15 +41506,15 @@ function compileAndRun() {
         case 2:
           result = _a.sent();
 
-          if (simulationStatus === 'compiling') {
+          if (simulationStatus === "compiling") {
             if (result.hex) {
-              if (arduinoContainer) arduinoContainer.status = 'on';
-              if (compilerOutputText) compilerOutputText.textContent = '';
-              simulationStatus = 'on';
+              if (arduinoContainer) arduinoContainer.status = "on";
+              if (compilerOutputText) compilerOutputText.textContent = "";
+              simulationStatus = "on";
               robot.run(result.hex);
             } else {
-              simulationStatus = 'off';
-              if (arduinoContainer) arduinoContainer.status = 'off';
+              simulationStatus = "off";
+              if (arduinoContainer) arduinoContainer.status = "off";
               if (compilerOutputText) compilerOutputText.textContent = result.stderr;
             }
           }
@@ -41541,9 +41525,9 @@ function compileAndRun() {
 
         case 3:
           err_1 = _a.sent();
-          simulationStatus = 'off';
-          if (arduinoContainer) arduinoContainer.status = 'off';
-          alert('Failed: ' + err_1);
+          simulationStatus = "off";
+          if (arduinoContainer) arduinoContainer.status = "off";
+          alert("Failed: " + err_1);
           return [3
           /*break*/
           , 5];
@@ -41574,7 +41558,7 @@ function stopCode() {
     
   }*/
 }
-},{"@p4labs/environments":"../node_modules/@p4labs/environments/dist/esm/index.js","./compile":"compile.ts","@p4labs/elements":"../node_modules/@p4labs/elements/dist/esm/index.js","./index.css":"index.css"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+},{"@p4labs/environments":"../node_modules/@p4labs/environments/dist/esm/index.js","./compile":"ts/compile.ts","@p4labs/elements":"../node_modules/@p4labs/elements/dist/esm/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -41602,7 +41586,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "41929" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46505" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -41778,5 +41762,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","lesson1.ts"], null)
-//# sourceMappingURL=/lesson1.53ed19dd.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/servo-1.ts"], null)
+//# sourceMappingURL=/servo-1.9aac954c.js.map
