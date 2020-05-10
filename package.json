@@ -15,9 +15,9 @@
   "description": "TypeScript app with parcel bundler.",
   "main": "lib/parcel-typescript-example.js",
   "scripts": {
-    "start": "copyfiles -f src/imgs/*.jpg src/imgs/*.png dist/imgs &&  parcel serve src/index.html",
-    "build": "copyfiles -f src/imgs/*.jpg src/imgs/*.png dist/imgs && cross-env NODE_ENV=production parcel build src/index.html --public-url .",
-    "watch": "parcel watch src/index.html",
+    "start": "copyfiles -f src/imgs/*.jpg src/imgs/*.png dist/imgs &&  parcel src/index.hbs --no-cache",
+    "build": "copyfiles -f src/imgs/*.jpg src/imgs/*.png dist/imgs && cross-env NODE_ENV=production parcel build src/index.hbs --no-cache --public-url .",
+    "watch": "parcel watch src/index.hbs",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
@@ -30,19 +30,44 @@
   },
   "homepage": "https://azu.github.io/parcel-typescript-example/",
   "devDependencies": {
+    "@types/jest": "^24.9.1",
     "@types/jquery": "^3.3.38",
+    "@types/node": "^12.12.37",
+    "@types/prettier": "^2.0.0",
+    "@typescript-eslint/eslint-plugin": "^2.30.0",
+    "@typescript-eslint/parser": "^2.30.0",
+    "acorn": "^7.1.1",
     "copyfiles": "^2.2.0",
     "cross-env": "^5.2.0",
+    "eslint": "^6.7.2",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-json": "^2.0.1",
+    "eslint-plugin-prettier": "^3.1.1",
     "gh-pages": "^1.2.0",
+    "husky": "^3.0.9",
+    "jest": "^25.5.2",
+    "lint-staged": "^9.5.0",
     "parcel-bundler": "^1.10.0",
+    "prettier": "^2.0.5",
+    "ts-jest": "^25.4.0",
+    "ts-node": "^8.9.1",
     "typescript": "^3.7.3"
   },
   "dependencies": {
     "@p4labs/elements": "file:p4-elements/",
     "@p4labs/environments": "file:p4-environments/",
     "@p4labs/hardware": "file:p4-hardware/",
-    "@types/jest": "^25.2.1",
+    "@types/bootstrap": "^4.3.2",
+    "@wokwi/elements": "^0.15.0",
     "bootstrap": "4.3.1",
-    "jquery": "3.4.1"
+    "jquery": "3.4.1",
+    "parcel-plugin-handlebars": "^0.4.4"
+  },
+  "lint-staged": {
+    "src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write",
+      "git add"
+    ]
   }
 }

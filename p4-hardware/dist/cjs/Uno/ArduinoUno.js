@@ -2,6 +2,7 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const execute_1 = require("./execute");
 const cpu_performance_1 = require("./cpu-performance");
+const Component_1 = require("../Component");
 const format_time_1 = require("./format-time");
 const avr8js_1 = require("avr8js");
 class ArduinoUno {
@@ -13,6 +14,7 @@ class ArduinoUno {
         this.serialOutput = "";
         this.serialOutputElement = null;
         this.arduinoContainer = null;
+        this.unoElement = null;
     }
     setSerialOutputElement(serialOutputElement) {
         this.serialOutputElement = serialOutputElement;
@@ -20,15 +22,20 @@ class ArduinoUno {
     setTimeLabelElement(arduinoContainer) {
         this.arduinoContainer = arduinoContainer;
     }
-    getSerialOutput() { return this.serialOutput; }
+    setUnoElement(arduinoUnoElement) {
+        this.unoElement = arduinoUnoElement;
+    }
+    getSerialOutput() {
+        return this.serialOutput;
+    }
     addConnection(pin, component) {
         const connection = { pin: pin, component: component };
         //TODO can we allow multiple components to be connected to the same pin?
         /*for(const connection of this.digitalPinConnections)
-        {
-            if(connection.pin === pin)
-                return false;
-        }*/
+            {
+                if(connection.pin === pin)
+                    return false;
+            }*/
         this.pinConnections.push(connection);
         return true;
     }
@@ -55,17 +62,20 @@ class ArduinoUno {
     executeProgram(hex) {
         this.runner = new execute_1.AVRRunner(hex);
         const MHZ = 16000000;
+        if (this.unoElement) {
+            this.addConnection(13, new pin13(13, "led", this.unoElement));
+        }
         for (const event of this.cpuEventsMicrosecond)
             this.runner.addCPUEventMicrosecond(event);
         for (const event of this.cpuEvents)
             this.runner.addCPUEvent(event);
         for (const connection of this.pinConnections)
             connection.component.reset();
-        this.runner.portD.addListener(value => {
+        this.runner.portD.addListener((value) => {
             if (this.runner)
                 this.updateComponents(value, 0, this.runner.cpu.cycles);
         });
-        this.runner.portB.addListener(value => {
+        this.runner.portB.addListener((value) => {
             if (this.runner)
                 this.updateComponents(value, 8, this.runner.cpu.cycles);
         });
@@ -111,3 +121,15 @@ class ArduinoUno {
     }
 }
 exports.ArduinoUno = ArduinoUno;
+class pin13 extends Component_1.Component {
+    constructor(pin, label, unoElement) {
+        super(pin, label);
+        this.unoElement = unoElement;
+    }
+    update(pinState, cpuCycles) {
+        this.unoElement.led13 = pinState;
+    }
+    reset() {
+        this.unoElement.led13 = false;
+    }
+}

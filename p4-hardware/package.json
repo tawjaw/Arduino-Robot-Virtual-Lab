@@ -43,8 +43,7 @@
     "typescript": "^3.6.5"
   },
   "husky": {
-    "hooks": {
-    }
+    "hooks": {}
   },
   "lint-staged": {
     "src/**/*.{ts,tsx}": [
@@ -59,6 +58,7 @@
   },
   "dependencies": {
     "@p4labs/elements": "file:../p4-elements/",
+    "@wokwi/elements": "^0.15.0",
     "avr8js": "^0.8.4"
   },
   "browserslist": [

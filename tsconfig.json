@@ -18,17 +18,8 @@
     "outDir": "./lib/",
 
     "jsx": "preserve",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
-    
+    "lib": ["es2017", "dom"]
   },
-  "include": [
-    "src/**/*"
-  ],
-  "exclude": [
-    ".git",
-    "node_modules"
-  ]
+  "include": ["src/**/*"],
+  "exclude": [".git", "node_modules"]
 }
