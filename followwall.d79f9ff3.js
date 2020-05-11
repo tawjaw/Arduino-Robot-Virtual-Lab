@@ -41315,29 +41315,31 @@ void loop() {
   Serial.println(duration/ 29 / 2);
 
   long distance = duration/29/2;
-  if(distance > 110)
+  if(distance > 120)
   {
     leftservo.write(90);
-    rightservo.write(40);
-    delay(100);
+    rightservo.write(20);
+    delay(150);
     leftservo.write(110);
     rightservo.write(70);
     delay(100);
     leftservo.write(140);
     rightservo.write(90);
+        delay(150);
+
 
   }
-  else if (distance < 90)
+  else if (distance < 115)
   {
-    leftservo.write(160);
+    leftservo.write(170);
     rightservo.write(90);
-    delay(100);
+    delay(150);
     leftservo.write(110);
     rightservo.write(70);
     delay(100);
     leftservo.write(90);
-    rightservo.write(30);
-    delay(100);
+    rightservo.write(40);
+    delay(150);
   }
   else
   {
@@ -41546,6 +41548,13 @@ robot.environment.addObstacleRectangle(400, 800, 800, 30); //robot.environment.a
 
 robot.environment.addCoin(400, 120);
 robot.environment.addCoin(600, 120);
+var position = robot.environment.robotInitialPosition;
+robot.environment.robotInitialPosition = {
+  x: position.x,
+  y: position.y + 70
+};
+robot.environment.reset();
+robot.environment.tick(10);
 
 function compileAndRun() {
   return __awaiter(this, void 0, void 0, function () {
@@ -41654,7 +41663,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42163" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "33595" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
