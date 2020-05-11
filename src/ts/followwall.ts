@@ -34,29 +34,31 @@ void loop() {
   Serial.println(duration/ 29 / 2);
 
   long distance = duration/29/2;
-  if(distance > 110)
+  if(distance > 120)
   {
     leftservo.write(90);
-    rightservo.write(40);
-    delay(100);
+    rightservo.write(20);
+    delay(150);
     leftservo.write(110);
     rightservo.write(70);
     delay(100);
     leftservo.write(140);
     rightservo.write(90);
+        delay(150);
+
 
   }
-  else if (distance < 90)
+  else if (distance < 115)
   {
-    leftservo.write(160);
+    leftservo.write(170);
     rightservo.write(90);
-    delay(100);
+    delay(150);
     leftservo.write(110);
     rightservo.write(70);
     delay(100);
     leftservo.write(90);
-    rightservo.write(30);
-    delay(100);
+    rightservo.write(40);
+    delay(150);
   }
   else
   {
@@ -65,7 +67,7 @@ void loop() {
   }
 
 
-  //delay(50);  
+  //delay(50);
 }
 
 
@@ -178,7 +180,10 @@ robot.environment.addObstacleRectangle(400, 800, 800, 30);
 //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
 robot.environment.addCoin(400, 120);
 robot.environment.addCoin(600, 120);
-
+const position = robot.environment.robotInitialPosition;
+robot.environment.robotInitialPosition = { x: position.x, y: position.y + 70 };
+robot.environment.reset();
+robot.environment.tick(10);
 async function compileAndRun() {
   if (serialOutputText) serialOutputText.textContent = "";
   try {

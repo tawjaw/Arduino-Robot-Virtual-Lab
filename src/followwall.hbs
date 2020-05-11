@@ -1,6 +1,19 @@
 {{!< base}}
 
 <h1 class="mt-4">Follow The Wall</h1>
+<p>Instead of moving the robot with hardcoded steps, we want to use feedback from the ultrasonic sensor to decide how to
+  move the robot. This can be done with the loop function. At every loop we get the distance of the top wall using the
+  ultrasonic sensor. And then we make a decision based on that distance on how to move the servos of the robot. For
+  example, a starting strategy would be: if the distance is greater than 110 then move left. If less than 110 move
+  right.</p>
+<div class="alert alert-success" role="alert"
+  style="max-width: 600px; margin-left: auto; margin-right:auto; margin-top:50px;">
+  <h4 class="alert-heading">Exercise</h4>
+  <p>The coins are around 110 cm away from the top wall. Use the data from the ultrasonic sensor to navigate the robot
+    to collect both coins.</p>
+
+</div>
+<br><br>
 
 <div class="row" style="margin-bottom: 100px;">
   <div class="col-md-6 app-container" style="height:600px;">
