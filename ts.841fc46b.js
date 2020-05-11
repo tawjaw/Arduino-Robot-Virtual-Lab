@@ -29898,7 +29898,7 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
   _createClass(UltrasonicSensor, [{
     key: "setDistanceOfObstacle",
     value: function setDistanceOfObstacle(distance) {
-      this.distanceOfObstacle = distance;
+      if (!this.isTriggered) this.distanceOfObstacle = distance;
     }
   }, {
     key: "getEchoPin",
@@ -29909,21 +29909,21 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
     key: "update",
     value: function update(pinState, cpuCycles) {
       if (pinState) {
-        if (!this.pinState) //if we are LOW 
-          {
-            this.startingCpuCyclesOfPulse = cpuCycles;
-          }
+        if (!this.pinState) {
+          //if we are LOW
+          this.startingCpuCyclesOfPulse = cpuCycles;
+        }
       } else {
         if (this.pinState) {
           var widthOfLastPulse = (0, _formatTime.getMicroSeconds)((cpuCycles - this.startingCpuCyclesOfPulse) / MHZ);
 
-          if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) //10 micros to triger the echo + 10 error
-            {
-              if (!this.echoPinState) {
-                this.isTriggered = true;
-                this.startingTimeOfTrigger = Math.floor(cpuCycles * 1000000 / MHZ);
-              }
+          if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) {
+            //10 micros to triger the echo + 10 error
+            if (!this.echoPinState) {
+              this.isTriggered = true;
+              this.startingTimeOfTrigger = Math.floor(cpuCycles * 1000000 / MHZ);
             }
+          }
         }
       }
 
@@ -29936,19 +29936,19 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
         var targetDuration = this.distanceOfObstacle * 2 / 0.0343;
         var pulseDuration = Math.floor(cpuCycles * 1000000 / MHZ) - this.startingTimeOfEcho;
 
-        if (pulseDuration >= targetDuration) //flip the trigger down 
-          {
-            this.echoPinState = false;
-          }
+        if (pulseDuration >= targetDuration) {
+          //flip the trigger down
+          this.echoPinState = false; //console.log(targetDuration, this.distanceOfObstacle);
+        }
       } else {
-        if (this.isTriggered && Math.floor(cpuCycles * 1000000 / MHZ) > this.startingTimeOfTrigger + 14) //wait few milliseconds after the trigger for the echos to be sent
+        if (this.isTriggered && Math.floor(cpuCycles * 1000000 / MHZ) > this.startingTimeOfTrigger + 14) {
+          //wait few milliseconds after the trigger for the echos to be sent
           //which gives enough time for pulseIn to get called, as it waits for the moment it turns HIGH
           //if the flip is immidiate, pulseIn will keep on waiting for the pin to go LOW and then HIGH or until it times out
-          {
-            this.echoPinState = true;
-            this.startingTimeOfEcho = Math.floor(cpuCycles * 1000000 / MHZ);
-            this.isTriggered = false;
-          }
+          this.echoPinState = true;
+          this.startingTimeOfEcho = Math.floor(cpuCycles * 1000000 / MHZ);
+          this.isTriggered = false;
+        }
       }
 
       return this.echoPinState;
@@ -30178,7 +30178,6 @@ window.require(["vs/editor/editor.main"], function () {
   });
 });
 
-var statusLabel = document.querySelector("#status-label");
 var compilerOutputText = document.querySelector("#compiler-output-text");
 var serialOutputText = document.querySelector("#serial-output-text");
 var arduinoContainer = document.querySelector("#setup-workshop-ide-container");
@@ -30286,7 +30285,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46505" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43793" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

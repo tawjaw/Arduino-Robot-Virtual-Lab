@@ -11068,22 +11068,22 @@ function () {
 
     this.robotBody = matter_js_1.Bodies.rectangle(100, 100, 50, 30, {
       render: {
-        fillStyle: 'DarkRed'
+        fillStyle: "DarkRed"
       }
     });
     this.leftWheelBody = matter_js_1.Bodies.rectangle(88, 82, 20, 6, {
       render: {
-        fillStyle: 'black'
+        fillStyle: "black"
       }
     });
     this.rightWheelBody = matter_js_1.Bodies.rectangle(88, 118, 20, 6, {
       render: {
-        fillStyle: 'black'
+        fillStyle: "black"
       }
     }); //create the ultrasonic sensor body
 
     this.ultrasonicSensor = CustomBodies_1.createPartCircle(110, -30, 50, 200, -3 * Math.PI / 7, {
-      label: 'ultrasonic'
+      label: "ultrasonic"
     });
     this.ultrasonicSensor.isSensor = true;
     this.ultrasonicSensor.render.opacity = 0.2;
@@ -11110,7 +11110,7 @@ function () {
     this.reset(); //add collision events to calculate obstacle distance
 
     var self = this;
-    matter_js_1.Events.on(this._engine, 'collisionActive', function (event) {
+    matter_js_1.Events.on(this._engine, "collisionActive", function (event) {
       self.onCollision(event);
     }); //;
 
@@ -11118,21 +11118,21 @@ function () {
       self.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
     });
     /* //add mouse for testing
-        // add mouse control
-    var mouse = Mouse.create(this._render.canvas),
-    mouseConstraint = MouseConstraint.create(this._engine, {
-        mouse: mouse,
-        constraint: {
-            stiffness: 0.2,
-            render: {
-                visible: false
+            // add mouse control
+        var mouse = Mouse.create(this._render.canvas),
+        mouseConstraint = MouseConstraint.create(this._engine, {
+            mouse: mouse,
+            constraint: {
+                stiffness: 0.2,
+                render: {
+                    visible: false
+                }
             }
-        }
-    });
-     World.add(this._engine.world, mouseConstraint);
-     // keep the mouse in sync with rendering
-    this._render.mouse = mouse;
-     */
+        });
+             World.add(this._engine.world, mouseConstraint);
+             // keep the mouse in sync with rendering
+        this._render.mouse = mouse;
+             */
   }
 
   TwoWheelRobot.prototype.onCollision = function (event) {
@@ -11144,15 +11144,15 @@ function () {
       var bodyA = _a.bodyA,
           bodyB = _a.bodyB;
 
-      if (bodyA.label === 'ultrasonic' && bodyB.label === 'obstacle' || bodyB.label === 'ultrasonic' && bodyA.label === 'obstacle') {
+      if (bodyA.label === "ultrasonic" && bodyB.label === "obstacle" || bodyB.label === "ultrasonic" && bodyA.label === "obstacle") {
         if (_this.robot) {
           _this.updateUltrasonicSensor();
         }
-      } else if (bodyA.label === 'coin' && bodyB.label !== 'ultrasonic') {
+      } else if (bodyA.label === "coin" && bodyB.label !== "ultrasonic") {
         matter_js_1.World.remove(_this._engine.world, bodyA);
 
         _this.removedCoins.push(bodyA);
-      } else if (bodyB.label === 'coin' && bodyA.label !== 'ultrasonic') {
+      } else if (bodyB.label === "coin" && bodyA.label !== "ultrasonic") {
         matter_js_1.World.remove(_this._engine.world, bodyB);
 
         _this.removedCoins.push(bodyB);
@@ -11164,7 +11164,7 @@ function () {
     var sensorStartingPoint = utils_1.getTranformedPoint(this.robot.position, 0, 15, -10);
     var startingAngle = this.robot.angle - 5 * Math.PI / 12;
     this.ultrasonicSensorDistance = utils_1.findMinimumDistanceToObstacle(sensorStartingPoint, startingAngle, 200, this.obstacles);
-    if (this.ultrasonicSensorDistance > TwoWheelRobot.maxUltrasonicDistance) this.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
+    if (this.ultrasonicSensorDistance > TwoWheelRobot.maxUltrasonicDistance) this.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance; //console.log(this.ultrasonicSensorDistance);
   };
 
   TwoWheelRobot.prototype.addObstacleRectangle = function (posX, posY, width, height, color) {
@@ -11174,7 +11174,7 @@ function () {
 
     var obstacle = matter_js_1.Bodies.rectangle(posX, posY, width, height, {
       isStatic: true,
-      label: 'obstacle',
+      label: "obstacle",
       render: {
         fillStyle: color
       }
@@ -11186,10 +11186,10 @@ function () {
   TwoWheelRobot.prototype.addCoin = function (posX, posY) {
     var coin = matter_js_1.Bodies.circle(posX, posY, 15, {
       isSensor: true,
-      label: 'coin'
+      label: "coin"
     });
     this.coins.push(coin);
-    coin.render.sprite.texture = 'imgs/coin.png';
+    coin.render.sprite.texture = "imgs/coin.png";
     matter_js_1.World.add(this._engine.world, [coin]);
   };
 
@@ -14356,7 +14356,7 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
   _createClass(UltrasonicSensor, [{
     key: "setDistanceOfObstacle",
     value: function setDistanceOfObstacle(distance) {
-      this.distanceOfObstacle = distance;
+      if (!this.isTriggered) this.distanceOfObstacle = distance;
     }
   }, {
     key: "getEchoPin",
@@ -14367,21 +14367,21 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
     key: "update",
     value: function update(pinState, cpuCycles) {
       if (pinState) {
-        if (!this.pinState) //if we are LOW 
-          {
-            this.startingCpuCyclesOfPulse = cpuCycles;
-          }
+        if (!this.pinState) {
+          //if we are LOW
+          this.startingCpuCyclesOfPulse = cpuCycles;
+        }
       } else {
         if (this.pinState) {
           var widthOfLastPulse = (0, _formatTime.getMicroSeconds)((cpuCycles - this.startingCpuCyclesOfPulse) / MHZ);
 
-          if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) //10 micros to triger the echo + 10 error
-            {
-              if (!this.echoPinState) {
-                this.isTriggered = true;
-                this.startingTimeOfTrigger = Math.floor(cpuCycles * 1000000 / MHZ);
-              }
+          if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) {
+            //10 micros to triger the echo + 10 error
+            if (!this.echoPinState) {
+              this.isTriggered = true;
+              this.startingTimeOfTrigger = Math.floor(cpuCycles * 1000000 / MHZ);
             }
+          }
         }
       }
 
@@ -14394,19 +14394,19 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
         var targetDuration = this.distanceOfObstacle * 2 / 0.0343;
         var pulseDuration = Math.floor(cpuCycles * 1000000 / MHZ) - this.startingTimeOfEcho;
 
-        if (pulseDuration >= targetDuration) //flip the trigger down 
-          {
-            this.echoPinState = false;
-          }
+        if (pulseDuration >= targetDuration) {
+          //flip the trigger down
+          this.echoPinState = false; //console.log(targetDuration, this.distanceOfObstacle);
+        }
       } else {
-        if (this.isTriggered && Math.floor(cpuCycles * 1000000 / MHZ) > this.startingTimeOfTrigger + 14) //wait few milliseconds after the trigger for the echos to be sent
+        if (this.isTriggered && Math.floor(cpuCycles * 1000000 / MHZ) > this.startingTimeOfTrigger + 14) {
+          //wait few milliseconds after the trigger for the echos to be sent
           //which gives enough time for pulseIn to get called, as it waits for the moment it turns HIGH
           //if the flip is immidiate, pulseIn will keep on waiting for the pin to go LOW and then HIGH or until it times out
-          {
-            this.echoPinState = true;
-            this.startingTimeOfEcho = Math.floor(cpuCycles * 1000000 / MHZ);
-            this.isTriggered = false;
-          }
+          this.echoPinState = true;
+          this.startingTimeOfEcho = Math.floor(cpuCycles * 1000000 / MHZ);
+          this.isTriggered = false;
+        }
       }
 
       return this.echoPinState;
@@ -14474,7 +14474,7 @@ function () {
     var _this = this;
 
     if (canvasBackground === void 0) {
-      canvasBackground = 'white';
+      canvasBackground = "white";
     }
 
     this.arduino = null;
@@ -14513,14 +14513,17 @@ function () {
     this.arduino.addCPUEventMicrosecond(5, function (cpuCycles) {
       var _a;
 
-      if (_this.environment) _this.ultrasonic.setDistanceOfObstacle(_this.environment.ultrasonicSensorDistance);
+      if (_this.environment) {
+        _this.ultrasonic.setDistanceOfObstacle(_this.environment.ultrasonicSensorDistance);
+      }
+
       (_a = _this.arduino) === null || _a === void 0 ? void 0 : _a.writeDigitalPin(_this.ultrasonic.getEchoPin(), _this.ultrasonic.getEchoPinState(cpuCycles));
     });
     /*
-    this.arduino.addCPUEvent(1000, () =>{
-       console.log(this.environment?.rightWheelSpeed, this.environment?.leftWheelSpeed);
-    })
-    */
+        this.arduino.addCPUEvent(1000, () =>{
+           console.log(this.environment?.rightWheelSpeed, this.environment?.leftWheelSpeed);
+        })
+        */
   }
 
   TwoServoRobot.prototype.run = function (hex) {
@@ -41274,7 +41277,7 @@ Object.defineProperty(exports, "ArduinoIDEContainer", {
 });
 
 var _arduinoIdeContainerElement = require("./arduino-ide-container-element");
-},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/servo-1.ts":[function(require,module,exports) {
+},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/followwall.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -41420,8 +41423,6 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
-var _a, _b, _c, _d, _e, _f;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -41443,8 +41444,8 @@ window.require.config({
 });
 
 window.require(["vs/editor/editor.main"], function () {
-  editor = monaco.editor.create(document.querySelector(".code-editor"), {
-    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \n\nconst int pingPin = 11; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 12; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  Serial.begin(115200);\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n  printDistance();\n\n  //move forward fast\n  leftservo.write(170);\n  rightservo.write(10);\n  delay(7000);\n\n  printDistance();\n  //rotate right fast\n  leftservo.write(170);\n  rightservo.write(170);\n  delay(3000);\n\n  printDistance();\n  //move forward fast\n  leftservo.write(170);\n  rightservo.write(10);\n  delay(8000);\n\n  printDistance();\n  //stop\n  leftservo.write(90);\n  rightservo.write(90);\n}\n\nvoid loop() {\n\n}\n\nvoid printDistance()\n{\n  long duration, inches, cm;\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  duration = pulseIn(echoPin, HIGH);\n  inches = microsecondsToInches(duration);\n  cm = microsecondsToCentimeters(duration);\n  Serial.print(inches);\n  Serial.print(\"in, \");\n  Serial.print(cm);\n  Serial.print(\"cm\");\n  Serial.println();\n\n}\nlong microsecondsToInches(long microseconds) {\n  return microseconds / 74 / 2;\n}\n\nlong microsecondsToCentimeters(long microseconds) {\n  return microseconds / 29 / 2;\n}\n \n",
+  editor = monaco.editor.create(document.querySelector("#ultrasonic-workshop-monaco"), {
+    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \nconst int pingPin = 11; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 12; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n   //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n}\n\nvoid loop() {\n\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n  Serial.println(duration/ 29 / 2);\n\n  long distance = duration/29/2;\n  if(distance > 51)\n  {\n    leftservo.write(150);\n    rightservo.write(20);\n  }\n  else if (distance < 49)\n  {\n    leftservo.write(160);\n    rightservo.write(30);\n  }\n  else\n  {\n    leftservo.write(170);\n    rightservo.write(10);\n  }\n  /*\n    \n  */\n\n  delay(50);  \n}\n",
     language: "cpp",
     minimap: {
       enabled: false
@@ -41453,39 +41454,25 @@ window.require(["vs/editor/editor.main"], function () {
   });
 });
 
-var statusLabel = document.querySelector("#status-label");
-var compilerOutputText = document.querySelector("#compiler-output-text");
-var serialOutputText = document.querySelector("#serial-output-text");
-var arduinoContainer = document.querySelector("#ide-container");
-arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener("_status-change", function (e) {
-  return handleIDEStatusChange(e);
-});
+var compilerOutputText = document.querySelector("#ultrasonic-compiler-output-text");
+var serialOutputText = document.querySelector("#ultrasonic-serial-output-text");
+var arduinoContainer = document.querySelector("#ultrasonic-workshop-ide-container"); //set up robot environment
 
-function handleIDEStatusChange(e) {
-  var status = e.detail.status;
-
-  if (status === "compiling" && simulationStatus !== "compiling") {
-    compileAndRun();
-  } else if (status === "off" && simulationStatus !== "off") {
-    stopCode();
-  }
-
-  simulationStatus = status;
-} //set up robot environment
-
-
-var canvas = document.getElementById("world");
+var canvas = document.getElementById("ultrasonic-world");
 var robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, "imgs/room-background.jpg");
-(_a = robot.environment) === null || _a === void 0 ? void 0 : _a.addObstacleRectangle(400, 50, 800, 20, "grey");
-(_b = robot.environment) === null || _b === void 0 ? void 0 : _b.addCoin(150, 100);
-(_c = robot.environment) === null || _c === void 0 ? void 0 : _c.addCoin(300, 100);
-(_d = robot.environment) === null || _d === void 0 ? void 0 : _d.addCoin(500, 300);
-(_e = robot.environment) === null || _e === void 0 ? void 0 : _e.addCoin(500, 400);
-(_f = robot.environment) === null || _f === void 0 ? void 0 : _f.addCoin(500, 600);
-var runButton = document.querySelector("#run-button");
-runButton === null || runButton === void 0 ? void 0 : runButton.addEventListener("click", compileAndRun);
-var stopButton = document.querySelector("#stop-button");
-stopButton === null || stopButton === void 0 ? void 0 : stopButton.addEventListener("click", stopCode);
+var roboty = 250; //robot.environment.robot.position = { x: 380, y: roboty };
+//robot.environment.tick(10);
+
+console.log(roboty); //robot.environment.robotInitialAngle = Math.PI / 2;
+
+robot.environment.addObstacleRectangle(0, 400, 30, 800);
+robot.environment.addObstacleRectangle(800, 400, 30, 800);
+robot.environment.addObstacleRectangle(400, 0, 800, 20);
+robot.environment.addObstacleRectangle(400, 800, 800, 30); //robot.environment.addObstacleRectangle(400, 120, 600, 10);
+//robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
+
+robot.environment.addCoin(400, 120);
+robot.environment.addCoin(600, 120);
 
 function compileAndRun() {
   return __awaiter(this, void 0, void 0, function () {
@@ -41497,7 +41484,7 @@ function compileAndRun() {
           _a.label = 1;
 
         case 1:
-          _a.trys.push([1, 3, 4, 5]);
+          _a.trys.push([1, 3,, 4]);
 
           return [4
           /*yield*/
@@ -41511,6 +41498,12 @@ function compileAndRun() {
               if (arduinoContainer) arduinoContainer.status = "on";
               if (compilerOutputText) compilerOutputText.textContent = "";
               simulationStatus = "on";
+              /* roboty = 200; //Math.floor(Math.random() * (250 - 170 + 1) + 170);
+              robot.environment.robotInitialPosition = { x: 100, y: roboty };
+              //robot.environment.addCoin()
+              console.log(robot.environment.robot.position);
+              robot.environment.reset(); */
+
               robot.run(result.hex);
             } else {
               simulationStatus = "off";
@@ -41521,7 +41514,7 @@ function compileAndRun() {
 
           return [3
           /*break*/
-          , 5];
+          , 4];
 
         case 3:
           err_1 = _a.sent();
@@ -41530,14 +41523,9 @@ function compileAndRun() {
           alert("Failed: " + err_1);
           return [3
           /*break*/
-          , 5];
+          , 4];
 
         case 4:
-          return [7
-          /*endfinally*/
-          ];
-
-        case 5:
           return [2
           /*return*/
           ];
@@ -41547,17 +41535,24 @@ function compileAndRun() {
 }
 
 function stopCode() {
-  //stopButton.setAttribute('disabled', '1');
-  //runButton.removeAttribute('disabled');
   robot.stop();
-  /*if (robot.arduino) {
-    runner.stop();
-    runner = null;
-    leftMotorSpeed = 0;
-    rightMotorSpeed = 0;
-    
-  }*/
 }
+
+function handleIDEStatusChange(e) {
+  var status = e.detail.status;
+
+  if (status === "compiling" && simulationStatus !== "compiling") {
+    compileAndRun();
+  } else if (status === "off" && simulationStatus !== "off") {
+    stopCode();
+  }
+
+  simulationStatus = status;
+}
+
+arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener("_status-change", function (e) {
+  return handleIDEStatusChange(e);
+});
 },{"@p4labs/environments":"../node_modules/@p4labs/environments/dist/esm/index.js","./compile":"ts/compile.ts","@p4labs/elements":"../node_modules/@p4labs/elements/dist/esm/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -41586,7 +41581,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "46505" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43793" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
@@ -41762,5 +41757,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/servo-1.ts"], null)
-//# sourceMappingURL=/servo-1.9aac954c.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/followwall.ts"], null)
+//# sourceMappingURL=/followwall.d79f9ff3.js.map
