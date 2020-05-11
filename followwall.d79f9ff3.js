@@ -41279,6 +41279,79 @@ Object.defineProperty(exports, "ArduinoIDEContainer", {
 var _arduinoIdeContainerElement = require("./arduino-ide-container-element");
 },{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/followwall.ts":[function(require,module,exports) {
 "use strict";
+/*
+//Solution
+#include <Servo.h>
+
+Servo leftservo;
+Servo rightservo;
+const int pingPin = 11; // Trigger Pin of Ultrasonic Sensor
+const int echoPin = 12; // Echo Pin of Ultrasonic Sensor
+
+void setup() {
+  leftservo.attach(9);
+  rightservo.attach(10);
+
+   //set up the Serial
+  Serial.begin(9600);
+  //setupt the pin modes
+  pinMode(pingPin, OUTPUT);
+  pinMode(echoPin, INPUT);
+
+}
+
+void loop() {
+
+  long duration;
+  //clear the ping pin
+  digitalWrite(pingPin, LOW);
+  delayMicroseconds(2);
+  //send the 10 microsecond trigger
+  digitalWrite(pingPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(pingPin, LOW);
+  //get the pulse duration in microseconds
+  duration = pulseIn(echoPin, HIGH);
+  Serial.println(duration/ 29 / 2);
+
+  long distance = duration/29/2;
+  if(distance > 110)
+  {
+    leftservo.write(90);
+    rightservo.write(40);
+    delay(100);
+    leftservo.write(110);
+    rightservo.write(70);
+    delay(100);
+    leftservo.write(140);
+    rightservo.write(90);
+
+  }
+  else if (distance < 90)
+  {
+    leftservo.write(160);
+    rightservo.write(90);
+    delay(100);
+    leftservo.write(110);
+    rightservo.write(70);
+    delay(100);
+    leftservo.write(90);
+    rightservo.write(30);
+    delay(100);
+  }
+  else
+  {
+    leftservo.write(110);
+    rightservo.write(70);
+  }
+
+
+  //delay(50);
+}
+
+
+
+*/
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
   function adopt(value) {
@@ -41445,7 +41518,7 @@ window.require.config({
 
 window.require(["vs/editor/editor.main"], function () {
   editor = monaco.editor.create(document.querySelector("#ultrasonic-workshop-monaco"), {
-    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \nconst int pingPin = 11; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 12; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n   //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n}\n\nvoid loop() {\n\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n  Serial.println(duration/ 29 / 2);\n\n  long distance = duration/29/2;\n  if(distance > 51)\n  {\n    leftservo.write(150);\n    rightservo.write(20);\n  }\n  else if (distance < 49)\n  {\n    leftservo.write(160);\n    rightservo.write(30);\n  }\n  else\n  {\n    leftservo.write(170);\n    rightservo.write(10);\n  }\n  /*\n    \n  */\n\n  delay(50);  \n}\n",
+    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \nconst int pingPin = 11; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 12; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n   //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n  leftservo.write(90);\n  rightservo.write(90);\n\n}\n\nvoid loop() {\n\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n\n  /*\n    TASK: The coins are around 110 cm away from the top wall.\n    Use the ultrasonic sensor data to navigate the robot in order\n    to collect the coins.\n  */\n\n  delay(50);  \n}\n",
     language: "cpp",
     minimap: {
       enabled: false
@@ -41581,7 +41654,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "43793" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "42163" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
