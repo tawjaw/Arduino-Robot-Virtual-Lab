@@ -3,7 +3,46 @@
 
 <h1 class="mt-4">Servos: Moving A 2 Wheel Robot</h1>
 <br>
-<p>Meet our robot, it has 2 servo motors that controls the two wheels. And a small </p>
+<p>Meet our robot, it has 2 servo motors that controls the two side wheels and a small caster wheel. The servo motors
+  are connected to the Arduino boards. The left servo is connected to pin 9 and the right servo is connected to pin 10.
+  In order to control the motors, we use a library <code class="cpp hljs">Servo.h</code>. To include the library into
+  our program we use the <code class="cpp hljs">#include &lt;Servo.h&gt;</code>. Note that the line that starts with
+  <code class="cpp hljs">#</code> does not end in a semicolon.
+
+<p>After we include the libbrary we can create two objects of <code class="cpp hljs">Servo</code>, which is done on line
+  3 and 4. For every servo variable, we give it a name to be able to use it afterwards in our code. Inside the setup
+  function, we will attach the pin number to the library servos. The left one is at pin 9 and the right servo at pin 10.
+  This is done on line 7 and 8.</p>
+<p>To control the servo, we can write to it an angle from 0 to 180. At 90 the continous servo does not move. And as you
+  increase the value towards the 180 or decrease it towards 0, the servo will change the speed in the specific direction
+  clockwise or anticlockwise, depending if the angle is above or under 90.</p>
+
+<p></p>
+<div class="alert alert-success" role="alert"
+  style="max-width: 600px; margin-left: auto; margin-right:auto; margin-top:50px;">
+  <h4 class="alert-heading">Exercise</h4>
+  <p>The following program writes an angle of 170 to the left servo and then waits for 3 seconds. After that it writes
+    90
+    to both servos for them to stop. Modify the code to collect all 3 coins.</p>
+  <div class="text-center">
+
+    <p>
+      <a class="btn btn-primary " style="width: 200px; font-size: 30px;   line-height: 40px;
+    " data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+        aria-controls="collapseExample">
+        HINT
+      </a>
+    </p>
+    <div class="collapse" id="collapseExample" style="max-width: 600px; margin-left:auto; margin-right:auto;">
+      <div class="card card-body">
+        The servos are installed opposite to each other. If both servo motors are moving clockwise or anticlockwise,
+        then
+        they will be moving the robot in opposite directions.
+      </div>
+    </div>
+  </div>
+</div>
+<br><br>
 
 <div class="row" style="margin-bottom: 100px;">
   <div class="col-md-6 app-container" style="height:600px;">
@@ -20,12 +59,16 @@
     <canvas class="robot-environment" style="max-height:600px; max-width:600px" id="moveforward-world"></canvas>
   </div>
 </div>
-<p>Text</p>
-<p>Text</p>
-<p>Text</p>
-<p>Text</p>
-<p>Text</p>
 
+
+<br><br>
+
+<div class="alert alert-success" role="alert"
+  style="max-width: 600px; margin-left: auto; margin-right:auto; margin-top:50px;">
+  <h4 class="alert-heading">Exercise</h4>
+  <p>Can you get all the coins?</p>
+</div>
+<br><br>
 <div class="row">
   <div class="col app-container" style="height:600px;">
     <p4-arduino-ide-container id="rotate-workshop-ide-container">
