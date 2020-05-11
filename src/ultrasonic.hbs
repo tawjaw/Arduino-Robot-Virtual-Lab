@@ -2,12 +2,25 @@
 
 <h1 class="mt-4">Ultrasonic Sensor: Obstacles and Navigation</h1>
 <br>
-<p>Our robot also has an ultrasonic sensor for detecting obstacles. This will allow us to use this as feedback for navigation.
+<p>Our robot also has an ultrasonic sensor for detecting obstacles. This will allow us to use this as feedback for
+  navigation.
   To prepare for this lab, you were asked to do some background research on the HC-SR04 ultrasonic sensor.
-  The goal was to understand how the sensor works and coding basics needed to program a solution to the more complex navigation
-  challenge that will provided for you. </p>
+  The goal was to understand how the sensor works and coding basics needed to program a solution to the more complex
+  navigation
+  challenge that will provided for you. The program below triggers the ultrasonic pin by sending a <code
+    class="cpp hljs">HIGH</code> signal for 10
+  microseconds and then uses <code class="cpp hljs">pulseIn</code> to
+  get the time in microseconds it took for the echo to be sent and then recieved back to the sensor. The program also
+  uses the Serial to output that duration in microseconds.</p>
 
+<div class="alert alert-success" role="alert"
+  style="max-width: 600px; margin-left: auto; margin-right:auto; margin-top:50px;">
+  <h4 class="alert-heading">Exercise</h4>
+  <p>By clicking on the buttons under the robot environment,
+    you can change the positio of the robot. Find the distance of the obstacle for each position.</p>
 
+</div>
+<br><br>
 <div class="row" style="margin-bottom: 100px;">
   <div class="col-md-6 app-container" style="height:600px;">
     <p4-arduino-ide-container id="ultrasonic-workshop-ide-container">
