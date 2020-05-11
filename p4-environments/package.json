@@ -21,6 +21,7 @@
   ],
   "devDependencies": {
     "@p4labs/elements": "file:../p4-elements/",
+    "@p4labs/hardware": "file:../p4-hardware/",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.37",
     "@types/prettier": "^2.0.0",

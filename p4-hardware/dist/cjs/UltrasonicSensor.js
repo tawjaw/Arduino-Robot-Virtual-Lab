@@ -15,23 +15,28 @@ class UltrasonicSensor extends Component_1.Component {
         this.echoPin = echoPin;
         this.echoPinState = false;
     }
-    setDistanceOfObstacle(distance) { this.distanceOfObstacle = distance; }
-    getEchoPin() { return this.echoPin; }
+    setDistanceOfObstacle(distance) {
+        if (!this.isTriggered)
+            this.distanceOfObstacle = distance;
+    }
+    getEchoPin() {
+        return this.echoPin;
+    }
     update(pinState, cpuCycles) {
         if (pinState) {
-            if (!this.pinState) //if we are LOW 
-             {
+            if (!this.pinState) {
+                //if we are LOW
                 this.startingCpuCyclesOfPulse = cpuCycles;
             }
         }
         else {
             if (this.pinState) {
                 const widthOfLastPulse = format_time_1.getMicroSeconds((cpuCycles - this.startingCpuCyclesOfPulse) / MHZ);
-                if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) //10 micros to triger the echo + 10 error
-                 {
+                if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) {
+                    //10 micros to triger the echo + 10 error
                     if (!this.echoPinState) {
                         this.isTriggered = true;
-                        this.startingTimeOfTrigger = Math.floor(cpuCycles * 1000000 / MHZ);
+                        this.startingTimeOfTrigger = Math.floor((cpuCycles * 1000000) / MHZ);
                     }
                 }
             }
@@ -40,21 +45,23 @@ class UltrasonicSensor extends Component_1.Component {
     }
     getEchoPinState(cpuCycles) {
         if (this.echoPinState) {
-            const targetDuration = this.distanceOfObstacle * 2 / 0.0343;
-            const pulseDuration = Math.floor(cpuCycles * 1000000 / MHZ) - this.startingTimeOfEcho;
-            if (pulseDuration >= targetDuration) //flip the trigger down 
-             {
+            const targetDuration = (this.distanceOfObstacle * 2) / 0.0343;
+            const pulseDuration = Math.floor((cpuCycles * 1000000) / MHZ) - this.startingTimeOfEcho;
+            if (pulseDuration >= targetDuration) {
+                //flip the trigger down
                 this.echoPinState = false;
+                //console.log(targetDuration, this.distanceOfObstacle);
             }
         }
         else {
-            if (this.isTriggered && Math.floor(cpuCycles * 1000000 / MHZ) > this.startingTimeOfTrigger + 14) 
-            //wait few milliseconds after the trigger for the echos to be sent
-            //which gives enough time for pulseIn to get called, as it waits for the moment it turns HIGH
-            //if the flip is immidiate, pulseIn will keep on waiting for the pin to go LOW and then HIGH or until it times out
-            {
+            if (this.isTriggered &&
+                Math.floor((cpuCycles * 1000000) / MHZ) >
+                    this.startingTimeOfTrigger + 14) {
+                //wait few milliseconds after the trigger for the echos to be sent
+                //which gives enough time for pulseIn to get called, as it waits for the moment it turns HIGH
+                //if the flip is immidiate, pulseIn will keep on waiting for the pin to go LOW and then HIGH or until it times out
                 this.echoPinState = true;
-                this.startingTimeOfEcho = Math.floor(cpuCycles * 1000000 / MHZ);
+                this.startingTimeOfEcho = Math.floor((cpuCycles * 1000000) / MHZ);
                 this.isTriggered = false;
             }
         }

@@ -1,20 +1,16 @@
----
-aboutTitle: Welcome to Arduino Robotics
----
 {{!< base}}
 
-<div class="container-fluid">
 
-  <h1 class="mt-4">Introduction</h1>
-  <br>
-  <p>Arduino is an <b>open source</b> electronics platform that allows us to control hardware easily. An Arduino is a
-    microcontroller. That means it does not have full power like a CPU (the brains behind the computer you are using
-    right now), but it has enough power to control hardware electronics by specifying what wire to output a voltage to
-    and which wire to read voltage from.</p>
-  <p>A <b>Sketch</b> is an Arduino program that gets compiled and uploaded to the Arduino board. In order to tell the
-    Arduino how to control the electronics that we connect to it, we need to write a program, a Sketch, that defines
-    what we want the Arduino to do.</p>
-  <pre class="code-block" id="demo"><code class="cpp hljs ">//this is a comment
+<h1 class="mt-4">Introduction</h1>
+<br>
+<p>Arduino is an <b>open source</b> electronics platform that allows us to control hardware easily. An Arduino is a
+  microcontroller. That means it does not have full power like a CPU (the brains behind the computer you are using
+  right now), but it has enough power to control hardware electronics by specifying what wire to output a voltage to
+  and which wire to read voltage from.</p>
+<p>A <b>Sketch</b> is an Arduino program that gets compiled and uploaded to the Arduino board. In order to tell the
+  Arduino how to control the electronics that we connect to it, we need to write a program, a Sketch, that defines
+  what we want the Arduino to do.</p>
+<pre class="code-block" id="demo"><code class="cpp hljs ">//this is a comment
 //setup function, runs only once when the Arduino starts
 void setup() {
 
@@ -24,25 +20,25 @@ void loop() {
 
 }</code></pre>
 
-  <p>The above is the main structure of every Sketch (Arduino program). The program uses a language called
-    <code class="hljs">C++</code>.
-  </p>
+<p>The above is the main structure of every Sketch (Arduino program). The program uses a language called
+  <code class="hljs">C++</code>.
+</p>
 
-  <h3>Comments</h3>
-  <p>The first line ofthe program is a comment. A comment means that this line will not become part of the program
-    compiled and uploaded to the Arduino board. It is just available for the reader of the programs (humans).
-  </p>
-  <p>In <code class="cpp hljs">C++</code> we can have two types of comments: one line comment and comment block. </p>
+<h3>Comments</h3>
+<p>The first line ofthe program is a comment. A comment means that this line will not become part of the program
+  compiled and uploaded to the Arduino board. It is just available for the reader of the programs (humans).
+</p>
+<p>In <code class="cpp hljs">C++</code> we can have two types of comments: one line comment and comment block. </p>
 
-  <h5>One Line Comment </h5>
-  <p>The comment needs to start with <code class="cpp hljs"> //</code>. Anything that comes after the <code
-      class="cpp hljs"> //</code> will be ignored by the compiler.</p>
-  <h5>Block Comment</h5>
-  <p>A block comment can contain multiple line comments. To start the block we use <code class="cpp hljs">/*</code>
-    and to end the block we use <code class="cpp hljs">*\</code>. A block comment will be
-    ignored by the comiler of Arduino, but might have useful information for the reader of the program. For example when
-    you submit your solution to your teacher.</p>
-  <pre class="code-block" id=""><code class="cpp hljs ">/*
+<h5>One Line Comment </h5>
+<p>The comment needs to start with <code class="cpp hljs"> //</code>. Anything that comes after the <code
+    class="cpp hljs"> //</code> will be ignored by the compiler.</p>
+<h5>Block Comment</h5>
+<p>A block comment can contain multiple line comments. To start the block we use <code class="cpp hljs">/*</code>
+  and to end the block we use <code class="cpp hljs">*\</code>. A block comment will be
+  ignored by the comiler of Arduino, but might have useful information for the reader of the program. For example when
+  you submit your solution to your teacher.</p>
+<pre class="code-block" id=""><code class="cpp hljs ">/*
     Student ID: 0123456
     Team Name: Cool Team
     This program does blablabla 
@@ -50,86 +46,86 @@ void loop() {
 */
 </code></pre>
 
-  <h3 class="">Setup Function</h3>
-  <p>A function is a way to group multiple lines of code and give them a name. Whenever we use that name, the program
-    will call all the lines of code inside of that function. In the next sections we will be writing our own functions.
-    The setup function in the Sketch program will be called by the Arduino board when we first turn it on ONCE.</p>
-  <p>This is important to keep in mind. Whatever we want to setup at the very beginning, we will write that code inside
-    the setup function.</p>
-  <pre class="code-block" id="demo"><code class="cpp hljs ">//setup function, runs only once when the Arduino starts
+<h3 class="">Setup Function</h3>
+<p>A function is a way to group multiple lines of code and give them a name. Whenever we use that name, the program
+  will call all the lines of code inside of that function. In the next sections we will be writing our own functions.
+  The setup function in the Sketch program will be called by the Arduino board when we first turn it on ONCE.</p>
+<p>This is important to keep in mind. Whatever we want to setup at the very beginning, we will write that code inside
+  the setup function.</p>
+<pre class="code-block" id="demo"><code class="cpp hljs ">//setup function, runs only once when the Arduino starts
   void setup() {
   
   }</code></pre>
 
-  <h3 class="">Loop Function</h3>
-  <p>The second function in a Sketch program is the loop function. This function will keep on being called over and over
-    again. Until you turn off the Arduino board. This is where you will write the code that will control your
-    electronics.</p>
+<h3 class="">Loop Function</h3>
+<p>The second function in a Sketch program is the loop function. This function will keep on being called over and over
+  again. Until you turn off the Arduino board. This is where you will write the code that will control your
+  electronics.</p>
 
-  <h1 class="mt-4">Arduino Uno Board</h1>
-  <p>The Uno board is one type of Arduino boards and the most popular one for learning Arduino. The board consists of
-    the
-    main chip that is the 'brains' behind the Arduino Uno and multiple pins that you can connect wires to them. These
-    wires are usually connected to electronics components so that the Uno can control the voltage that goes into these
-    electronics.</p>
-  <p>There are two kinds of pins, digital and analog. We will not cover the analog pins for now. The digital pins mean
-    they can be either <code class="cpp hljs">HIGH</code> or <code class="cpp hljs">LOW</code>. Which also means we
-    either ouput 5V through that pin or 0V. A pin can be either <code class="cpp hljs">INPUT</code> or <code
-      class="cpp hljs">OUTPUT</code>. If we are outputting voltage from the Arduino board to an electronic component
-    connected to that pin, then our pin is <code class="cpp hljs">OUTPUT</code> pin. If the electronic component is
-    producing voltage through that pin, and the Arduino board is reading that voltage then the pin is <code
-      class="cpp hljs">INPUT</code> pin. The digital pins can be seen on the top side of the Uno board labeled from 0 to
-    13.
-  </p>
+<h1 class="mt-4">Arduino Uno Board</h1>
+<p>The Uno board is one type of Arduino boards and the most popular one for learning Arduino. The board consists of
+  the
+  main chip that is the 'brains' behind the Arduino Uno and multiple pins that you can connect wires to them. These
+  wires are usually connected to electronics components so that the Uno can control the voltage that goes into these
+  electronics.</p>
+<p>There are two kinds of pins, digital and analog. We will not cover the analog pins for now. The digital pins mean
+  they can be either <code class="cpp hljs">HIGH</code> or <code class="cpp hljs">LOW</code>. Which also means we
+  either ouput 5V through that pin or 0V. A pin can be either <code class="cpp hljs">INPUT</code> or <code
+    class="cpp hljs">OUTPUT</code>. If we are outputting voltage from the Arduino board to an electronic component
+  connected to that pin, then our pin is <code class="cpp hljs">OUTPUT</code> pin. If the electronic component is
+  producing voltage through that pin, and the Arduino board is reading that voltage then the pin is <code
+    class="cpp hljs">INPUT</code> pin. The digital pins can be seen on the top side of the Uno board labeled from 0 to
+  13.
+</p>
 
-  <p>On the Uno board also there is a built in LED next to the L letter. This LED is connected to pin 13. In the Arduino
-    platform if you use <code class="cpp hljs">LED_BUILTIN</code> in your code, it will be translated into <code
-      class="cpp hljs">13</code> as that is the pin for the built in LED.
-  </p>
+<p>On the Uno board also there is a built in LED next to the L letter. This LED is connected to pin 13. In the Arduino
+  platform if you use <code class="cpp hljs">LED_BUILTIN</code> in your code, it will be translated into <code
+    class="cpp hljs">13</code> as that is the pin for the built in LED.
+</p>
 
-  <p>The following program turns on the built in LED and then waits for 3 seconds. In the setup function, the first
-    thing we do is specify for each pin we are using whether that pin is going to be used as output or input pin. We do
-    that by calling the Arduino function <code class="cpp hljs">pinMode(pinNumber, mode);</code> The pinNumber is the
-    number of the pin we want to setup, and the mode is whether it is <code class="cpp hljs">OUTPUT</code> or <code
-      class="cpp hljs">INPUT</code>. On line 2 of the program, we are specifying that pin 13 is an output pin. Which
-    means we will be deciding if the pin has 5V or 0V. If we output 5V then the LED will turn on. </p>
-  <p>Line 7 specifies the output to be <code class="cpp hljs">HIGH</code> to the <code
-      class="cpp hljs">LED_BUILTIN</code> pin. Which is
-    the same if we use <code class="cpp hljs">13</code> instead of <code class="cpp hljs">LED_BUILTIN</code>. We specify
-    the output to a digital pin by using the Arduino function <code
-      class="cpp hljs">digitalWrite(pinNumber, HIGHorLOW);</code>.</p>
-  <p>At line 9, the Arduino board is sleeping for 3 seconds. We tell the Arduino to sleep by using the Arduino function
-    <code class="cpp hljs">delay(timeInMilliSeconds);</code>.</p>
-  <p><strong>Run the program by clicking the toggle switch and see what happens!</strong></p>
-
-
+<p>The following program turns on the built in LED and then waits for 3 seconds. In the setup function, the first
+  thing we do is specify for each pin we are using whether that pin is going to be used as output or input pin. We do
+  that by calling the Arduino function <code class="cpp hljs">pinMode(pinNumber, mode);</code> The pinNumber is the
+  number of the pin we want to setup, and the mode is whether it is <code class="cpp hljs">OUTPUT</code> or <code
+    class="cpp hljs">INPUT</code>. On line 2 of the program, we are specifying that pin 13 is an output pin. Which
+  means we will be deciding if the pin has 5V or 0V. If we output 5V then the LED will turn on. </p>
+<p>Line 7 specifies the output to be <code class="cpp hljs">HIGH</code> to the <code class="cpp hljs">LED_BUILTIN</code>
+  pin. Which is
+  the same if we use <code class="cpp hljs">13</code> instead of <code class="cpp hljs">LED_BUILTIN</code>. We specify
+  the output to a digital pin by using the Arduino function <code
+    class="cpp hljs">digitalWrite(pinNumber, HIGHorLOW);</code>.</p>
+<p>At line 9, the Arduino board is sleeping for 3 seconds. We tell the Arduino to sleep by using the Arduino function
+  <code class="cpp hljs">delay(timeInMilliSeconds);</code>.</p>
+<p><strong>Run the program by clicking the toggle switch and see what happens!</strong></p>
 
 
-  <div class="row">
-    <div class="col app-container" style="height:600px;">
-      <p4-arduino-ide-container id="setup-workshop-ide-container">
-        <div class="code-editor" id="setup-workshop-monaco"></div>
-        <div class="compiler-output">
-          <pre id="compiler-output-text"></pre>
-        </div>
-      </p4-arduino-ide-container>
-    </div>
-    <div class="col">
-      <div class="">
-        <wokwi-arduino-uno id="setup-workshop-wokwi-arduino"></wokwi-arduino-uno>
-        <div class="alert alert-warning alert-dismissible fade show" role="alert"
-          style="margin-top:50px;border-color:#1d4059;  background-color: white; color: #1d4059 ; max-width: 500px; margin-left:auto;margin-right:auto;">
-          <strong>NOTE</strong> that at the end of each statemenet in <strong>C++</strong> we
-          need to add <strong>;</strong> to end the statement. Remove one of the semicolons and try to run the
-          program. The
-          Arduino compiler will tell you that you are missing a semicolon.
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
+
+
+<div class="row">
+  <div class="col app-container" style="height:600px;">
+    <p4-arduino-ide-container id="setup-workshop-ide-container">
+      <div class="code-editor" id="setup-workshop-monaco"></div>
+      <div class="compiler-output">
+        <pre class="compiler-output-text" id="compiler-output-text"></pre>
+      </div>
+    </p4-arduino-ide-container>
+  </div>
+  <div class="col">
+    <div class="">
+      <wokwi-arduino-uno id="setup-workshop-wokwi-arduino"></wokwi-arduino-uno>
+      <div class="alert alert-warning alert-dismissible fade show" role="alert"
+        style="margin-top:50px;border-color:#1d4059;  background-color: white; color: #1d4059 ; max-width: 500px; margin-left:auto;margin-right:auto;">
+        <strong>NOTE</strong> that at the end of each statemenet in <strong>C++</strong> we
+        need to add <strong>;</strong> to end the statement. Remove one of the semicolons and try to run the
+        program. The
+        Arduino compiler will tell you that you are missing a semicolon.
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
       </div>
     </div>
   </div>
+</div>
 </div>
 
 
@@ -141,7 +137,6 @@ void loop() {
     after the 3 seconds?</p>
 
 </div>
-
-</div>
 <script src="//cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.js"></script>
+
 <script src="ts/index.ts"></script>

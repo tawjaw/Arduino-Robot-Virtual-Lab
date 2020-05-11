@@ -1,0 +1,49 @@
+{{!< base}}
+
+
+<h1 class="mt-4">Servos: Moving A 2 Wheel Robot</h1>
+<br>
+<p>Meet our robot, it has 2 servo motors that controls the two wheels. And a small </p>
+
+<div class="row" style="margin-bottom: 100px;">
+  <div class="col-md-6 app-container" style="height:600px;">
+    <p4-arduino-ide-container id="moveforward-workshop-ide-container">
+      <div class="code-editor" id="moveforward-workshop-monaco"></div>
+      <div class="compiler-output">
+        <pre class="compiler-output-text" id="moveforward-compiler-output-text"></pre>
+        <pre class="compiler-output-text" id="moveforward-serial-output-text"></pre>
+
+      </div>
+    </p4-arduino-ide-container>
+  </div>
+  <div class="col-md-6" style="min-width:500px; ">
+    <canvas class="robot-environment" style="max-height:600px; max-width:600px" id="moveforward-world"></canvas>
+  </div>
+</div>
+<p>Text</p>
+<p>Text</p>
+<p>Text</p>
+<p>Text</p>
+<p>Text</p>
+
+<div class="row">
+  <div class="col app-container" style="height:600px;">
+    <p4-arduino-ide-container id="rotate-workshop-ide-container">
+      <div class="code-editor" id="rotate-workshop-monaco"></div>
+      <div class="compiler-output">
+        <pre class="compiler-output-text" id="rotate-compiler-output-text"></pre>
+        <pre class="compiler-output-text" id="rotate-serial-output-text"></pre>
+
+      </div>
+    </p4-arduino-ide-container>
+  </div>
+  <div class="col" style="min-width:500px;">
+    <canvas class="robot-environment" style="max-height:600px; max-width:600px" id="rotate-world"></canvas>
+  </div>
+</div>
+
+
+
+<script src="//cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.js"></script>
+
+<script src="ts/servo.ts"></script>

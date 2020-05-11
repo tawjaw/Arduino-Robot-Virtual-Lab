@@ -21,8 +21,8 @@ var TwoWheelRobot = /** @class */ (function () {
                 width: 800,
                 height: 800,
                 wireframes: false,
-                background: this.background
-            }
+                background: this.background,
+            },
         });
         this._runner = matter_js_1.Runner.create();
         this.obstacles = [];
@@ -31,17 +31,30 @@ var TwoWheelRobot = /** @class */ (function () {
         this.leftWheelSpeed = 0;
         this.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
         //create the robot body object
-        this.robotBody = matter_js_1.Bodies.rectangle(100, 100, 50, 30, { render: { fillStyle: 'DarkRed' } });
-        this.leftWheelBody = matter_js_1.Bodies.rectangle(88, 82, 20, 6, { render: { fillStyle: 'black' } });
-        this.rightWheelBody = matter_js_1.Bodies.rectangle(88, 118, 20, 6, { render: { fillStyle: 'black' } });
+        this.robotBody = matter_js_1.Bodies.rectangle(100, 100, 50, 30, {
+            render: { fillStyle: "DarkRed" },
+        });
+        this.leftWheelBody = matter_js_1.Bodies.rectangle(88, 82, 20, 6, {
+            render: { fillStyle: "black" },
+        });
+        this.rightWheelBody = matter_js_1.Bodies.rectangle(88, 118, 20, 6, {
+            render: { fillStyle: "black" },
+        });
         //create the ultrasonic sensor body
-        this.ultrasonicSensor = CustomBodies_1.createPartCircle(110, -30, 50, 200, -3 * Math.PI / 7, { label: 'ultrasonic' });
+        this.ultrasonicSensor = CustomBodies_1.createPartCircle(110, -30, 50, 200, (-3 * Math.PI) / 7, { label: "ultrasonic" });
         this.ultrasonicSensor.isSensor = true;
         this.ultrasonicSensor.render.opacity = 0.2;
         this.ultrasonicSensor.mass = 0;
         this.ultrasonicSensor.area = 0;
         //create the robot from parts
-        this.robot = matter_js_1.Body.create({ parts: [this.ultrasonicSensor, this.robotBody, this.leftWheelBody, this.rightWheelBody] });
+        this.robot = matter_js_1.Body.create({
+            parts: [
+                this.ultrasonicSensor,
+                this.robotBody,
+                this.leftWheelBody,
+                this.rightWheelBody,
+            ],
+        });
         this.robot.frictionAir = 0.5;
         matter_js_1.Body.setMass(this.robot, 1000);
         this.robotInitialPosition = robotInitialPosition;
@@ -52,34 +65,36 @@ var TwoWheelRobot = /** @class */ (function () {
         Body.setMass(obstacle, 100000000);  //make it very heavy
         this.obstacles.push(obstacle);
          */
-        matter_js_1.World.add(this._engine.world, [this.robot,]); //obstacle]);
+        matter_js_1.World.add(this._engine.world, [this.robot]); //obstacle]);
         matter_js_1.Render.run(this._render);
         this.reset();
         //add collision events to calculate obstacle distance
         var self = this;
-        matter_js_1.Events.on(this._engine, 'collisionActive', function (event) { self.onCollision(event); }); //;
+        matter_js_1.Events.on(this._engine, "collisionActive", function (event) {
+            self.onCollision(event);
+        }); //;
         matter_js_1.Events.on(this._engine, "collisionEnd", function (event) {
             self.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
         });
         /* //add mouse for testing
-            // add mouse control
-        var mouse = Mouse.create(this._render.canvas),
-        mouseConstraint = MouseConstraint.create(this._engine, {
-            mouse: mouse,
-            constraint: {
-                stiffness: 0.2,
-                render: {
-                    visible: false
+                // add mouse control
+            var mouse = Mouse.create(this._render.canvas),
+            mouseConstraint = MouseConstraint.create(this._engine, {
+                mouse: mouse,
+                constraint: {
+                    stiffness: 0.2,
+                    render: {
+                        visible: false
+                    }
                 }
-            }
-        });
-
-        World.add(this._engine.world, mouseConstraint);
-
-        // keep the mouse in sync with rendering
-        this._render.mouse = mouse;
-
-        */
+            });
+    
+            World.add(this._engine.world, mouseConstraint);
+    
+            // keep the mouse in sync with rendering
+            this._render.mouse = mouse;
+    
+            */
     }
     TwoWheelRobot.prototype.onCollision = function (event) {
         var _this = this;
@@ -87,17 +102,17 @@ var TwoWheelRobot = /** @class */ (function () {
         //console.log(pairs);
         pairs.forEach(function (_a) {
             var bodyA = _a.bodyA, bodyB = _a.bodyB;
-            if ((bodyA.label === 'ultrasonic' && bodyB.label === 'obstacle') ||
-                (bodyB.label === 'ultrasonic' && bodyA.label === 'obstacle')) {
+            if ((bodyA.label === "ultrasonic" && bodyB.label === "obstacle") ||
+                (bodyB.label === "ultrasonic" && bodyA.label === "obstacle")) {
                 if (_this.robot) {
                     _this.updateUltrasonicSensor();
                 }
             }
-            else if (bodyA.label === 'coin' && bodyB.label !== 'ultrasonic') {
+            else if (bodyA.label === "coin" && bodyB.label !== "ultrasonic") {
                 matter_js_1.World.remove(_this._engine.world, bodyA);
                 _this.removedCoins.push(bodyA);
             }
-            else if (bodyB.label === 'coin' && bodyA.label !== 'ultrasonic') {
+            else if (bodyB.label === "coin" && bodyA.label !== "ultrasonic") {
                 matter_js_1.World.remove(_this._engine.world, bodyB);
                 _this.removedCoins.push(bodyB);
             }
@@ -105,21 +120,29 @@ var TwoWheelRobot = /** @class */ (function () {
     };
     TwoWheelRobot.prototype.updateUltrasonicSensor = function () {
         var sensorStartingPoint = utils_1.getTranformedPoint(this.robot.position, 0, 15, -10);
-        var startingAngle = this.robot.angle - 5 * Math.PI / 12;
+        var startingAngle = this.robot.angle - (5 * Math.PI) / 12;
         this.ultrasonicSensorDistance = utils_1.findMinimumDistanceToObstacle(sensorStartingPoint, startingAngle, 200, this.obstacles);
         if (this.ultrasonicSensorDistance > TwoWheelRobot.maxUltrasonicDistance)
             this.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
+        //console.log(this.ultrasonicSensorDistance);
     };
     TwoWheelRobot.prototype.addObstacleRectangle = function (posX, posY, width, height, color) {
         if (color === void 0) { color = "grey"; }
-        var obstacle = matter_js_1.Bodies.rectangle(posX, posY, width, height, { isStatic: true, label: 'obstacle', render: { fillStyle: color } });
+        var obstacle = matter_js_1.Bodies.rectangle(posX, posY, width, height, {
+            isStatic: true,
+            label: "obstacle",
+            render: { fillStyle: color },
+        });
         this.obstacles.push(obstacle);
         matter_js_1.World.add(this._engine.world, [obstacle]);
     };
     TwoWheelRobot.prototype.addCoin = function (posX, posY) {
-        var coin = matter_js_1.Bodies.circle(posX, posY, 15, { isSensor: true, label: 'coin' });
+        var coin = matter_js_1.Bodies.circle(posX, posY, 15, {
+            isSensor: true,
+            label: "coin",
+        });
         this.coins.push(coin);
-        coin.render.sprite.texture = 'imgs/coin.png';
+        coin.render.sprite.texture = "imgs/coin.png";
         matter_js_1.World.add(this._engine.world, [coin]);
     };
     TwoWheelRobot.prototype.setSpeeds = function (left, right) {
@@ -143,8 +166,7 @@ var TwoWheelRobot = /** @class */ (function () {
     TwoWheelRobot.prototype.setRobotPosition = function (position) {
         matter_js_1.Body.setPosition(this.robot, position);
     };
-    TwoWheelRobot.prototype.setRobotInitialPosition = function (position) {
-    };
+    TwoWheelRobot.prototype.setRobotInitialPosition = function (position) { };
     TwoWheelRobot.prototype.run = function () {
         matter_js_1.Engine.run(this._engine);
     };

@@ -53,7 +53,6 @@ void loop() {
   );
 });
 
-const statusLabel = document.querySelector("#status-label");
 const compilerOutputText = document.querySelector("#compiler-output-text");
 const serialOutputText = document.querySelector("#serial-output-text");
 

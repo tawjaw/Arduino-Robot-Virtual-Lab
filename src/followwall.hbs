@@ -1,0 +1,24 @@
+{{!< base}}
+
+<h1 class="mt-4">Follow The Wall</h1>
+
+<div class="row" style="margin-bottom: 100px;">
+  <div class="col-md-6 app-container" style="height:600px;">
+    <p4-arduino-ide-container id="ultrasonic-workshop-ide-container">
+      <div class="code-editor" id="ultrasonic-workshop-monaco"></div>
+      <div class="compiler-output">
+        <pre class="compiler-output-text" id="ultrasonic-compiler-output-text"></pre>
+        <pre class="compiler-output-text" id="ultrasonic-serial-output-text"></pre>
+
+      </div>
+    </p4-arduino-ide-container>
+  </div>
+  <div class="col-md-6 text-center" style="min-width:500px; ">
+
+
+    <canvas class="robot-environment" style="max-height:600px; max-width:600px" id="ultrasonic-world"></canvas>
+
+  </div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.js"></script>
+<script src="ts/followwall.ts"></script>
