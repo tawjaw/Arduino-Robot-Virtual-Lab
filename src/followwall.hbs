@@ -11,7 +11,25 @@
   <h4 class="alert-heading">Exercise</h4>
   <p>The coins are around 110 cm away from the top wall. Use the data from the ultrasonic sensor to navigate the robot
     to collect both coins.</p>
+  <div class="text-center">
 
+    <p>
+      <a class="btn btn-primary " style="width: 200px; font-size: 30px;   line-height: 40px;
+    " data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+        aria-controls="collapseExample">
+        HINT
+      </a>
+    </p>
+    <div class="collapse" id="collapseExample" style="max-width: 600px; margin-left:auto; margin-right:auto;">
+      <div class="card card-body">
+        If you just rotate the robot left and right, you will not be getting closer or farther away from the wall. You
+        will just be changing the direction of where the robot is pointing to.
+        If you want to get closer to the wall, a good strategy to start with is:
+        <br><br><code> Rotate the robot to the left<br>Move the robot forward for few milliseconds<br>Rotate the robot back to the right</code><br>
+        After this, the robot will be moved closer to the wall while staying parallel with the wall.
+      </div>
+    </div>
+  </div>
 </div>
 <br><br>
 

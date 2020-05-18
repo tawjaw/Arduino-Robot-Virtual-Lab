@@ -59,8 +59,15 @@ var TwoWheelRobot = /** @class */ (function () {
         //add collision events to calculate obstacle distance
         var self = this;
         matter_js_1.Events.on(this._engine, 'collisionActive', function (event) { self.onCollision(event); }); //;
-        matter_js_1.Events.on(this._engine, "collisionEnd", function (event) {
-            self.updateUltrasonicSensor();
+        matter_js_1.Events.on(this._engine, 'collisionEnd', function (event) {
+            var pairs = event.pairs;
+            pairs.forEach(function (_a) {
+                var bodyA = _a.bodyA, bodyB = _a.bodyB;
+                if ((bodyA.label === 'ultrasonic' && bodyB.label === 'obstacle') ||
+                    (bodyB.label === 'ultrasonic' && bodyA.label === 'obstacle')) {
+                    self.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
+                }
+            });
         });
         /* //add mouse for testing
             // add mouse control
@@ -88,8 +95,7 @@ var TwoWheelRobot = /** @class */ (function () {
         //console.log(pairs);
         pairs.forEach(function (_a) {
             var bodyA = _a.bodyA, bodyB = _a.bodyB;
-            if ((bodyA.label === 'ultrasonic' && bodyB.label === 'obstacle') ||
-                (bodyB.label === 'ultrasonic' && bodyA.label === 'obstacle')) {
+            if (bodyA.label === 'ultrasonic' || bodyB.label === 'ultrasonic') {
                 if (_this.robot) {
                     _this.updateUltrasonicSensor();
                 }
