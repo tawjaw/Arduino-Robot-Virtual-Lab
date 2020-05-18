@@ -1,6 +1,5 @@
 import { Component } from "../Component";
-import { ArduinoIDEContainer } from "@p4labs/elements";
-import { ArduinoUnoElement } from "@wokwi/elements";
+import { ArduinoIDEContainer } from '@p4labs/elements';
 export declare class ArduinoUno {
     private runner;
     private cpuEvents;
@@ -9,10 +8,8 @@ export declare class ArduinoUno {
     private serialOutput;
     private serialOutputElement;
     private arduinoContainer;
-    private unoElement;
     setSerialOutputElement(serialOutputElement: Element): void;
     setTimeLabelElement(arduinoContainer: ArduinoIDEContainer): void;
-    setUnoElement(arduinoUnoElement: ArduinoUnoElement): void;
     getSerialOutput(): string;
     addConnection(pin: number, component: Component): boolean;
     addCPUEvent(period: number, eventCall: any): void;

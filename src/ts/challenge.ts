@@ -1,79 +1,3 @@
-/*
-//Solution
-#include <Servo.h>
-
-Servo leftservo;
-Servo rightservo;
-const int pingPin = 11; // Trigger Pin of Ultrasonic Sensor
-const int echoPin = 12; // Echo Pin of Ultrasonic Sensor
-
-void setup() {
-  leftservo.attach(9);
-  rightservo.attach(10);
-
-   //set up the Serial
-  Serial.begin(9600);
-  //setupt the pin modes
-  pinMode(pingPin, OUTPUT);
-  pinMode(echoPin, INPUT);
-
-}
-
-void loop() {
-
-  long duration;
-  //clear the ping pin
-  digitalWrite(pingPin, LOW);
-  delayMicroseconds(2);
-  //send the 10 microsecond trigger
-  digitalWrite(pingPin, HIGH);
-  delayMicroseconds(10);
-  digitalWrite(pingPin, LOW);
-  //get the pulse duration in microseconds
-  duration = pulseIn(echoPin, HIGH);
-  Serial.println(duration/ 29 / 2);
-
-  long distance = duration/29/2;
-  if(distance > 120)
-  {
-    leftservo.write(90);
-    rightservo.write(20);
-    delay(150);
-    leftservo.write(110);
-    rightservo.write(70);
-    delay(100);
-    leftservo.write(140);
-    rightservo.write(90);
-        delay(150);
-
-
-  }
-  else if (distance < 115)
-  {
-    leftservo.write(170);
-    rightservo.write(90);
-    delay(150);
-    leftservo.write(110);
-    rightservo.write(70);
-    delay(100);
-    leftservo.write(90);
-    rightservo.write(40);
-    delay(150);
-  }
-  else
-  {
-    leftservo.write(110);
-    rightservo.write(70);
-  }
-
-
-  //delay(50);
-}
-
-
-
-*/
-
 import { Robots } from "@p4labs/environments";
 import { buildHex } from "./compile";
 import "@p4labs/elements";
@@ -165,23 +89,25 @@ const robot = new Robots.Arduino.TwoServoRobot(
   arduinoContainer,
   "imgs/room-background.jpg"
 );
-let roboty = 250;
-//robot.environment.robot.position = { x: 300, y: 300 };
-//robot.environment.tick(10);
-console.log(roboty);
-//robot.environment.robotInitialAngle = Math.PI / 2;
-robot.environment.addObstacleRectangle(0, 400, 30, 800);
+
 robot.environment.addObstacleRectangle(800, 400, 30, 800);
-robot.environment.addObstacleRectangle(400, 0, 800, 20);
-robot.environment.addObstacleRectangle(400, 800, 800, 30);
+robot.environment.addObstacleRectangle(150, 0, 800, 30);
 
 //robot.environment.addObstacleRectangle(400, 120, 600, 10);
 
 //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
+robot.environment.addCoin(200, 120);
+robot.environment.addCoin(300, 120);
 robot.environment.addCoin(400, 120);
-robot.environment.addCoin(600, 120);
+robot.environment.addCoin(500, 120);
+
+robot.environment.addCoin(700, 200);
+robot.environment.addCoin(700, 300);
+robot.environment.addCoin(700, 400);
+robot.environment.addCoin(700, 500);
+
 const position = robot.environment.robotInitialPosition;
-robot.environment.robotInitialPosition = { x: position.x + 30, y: position.y + 70 };
+robot.environment.robotInitialPosition = { x: position.x, y: position.y + 70 };
 robot.environment.reset();
 robot.environment.tick(10);
 async function compileAndRun() {

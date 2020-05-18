@@ -1068,16 +1068,16 @@
 "@p4labs/environments@file:p4-environments":
   version "0.0.0"
   dependencies:
-    "@p4labs/hardware" "file:../../.cache/yarn/v6/npm-@p4labs-environments-0.0.0-6c151ec2-119d-45ef-b18e-e836b0ba7239-1589119512125/node_modules/@p4labs/p4-hardware"
+    "@p4labs/hardware" "file:../../.cache/yarn/v6/npm-@p4labs-environments-0.0.0-d97dd70a-93cb-4f04-8482-5dafd68d2ea7-1589804786021/node_modules/@p4labs/p4-hardware"
     "@types/matter-js" "^0.14.2"
-    avr8js "^0.8.4"
+    avr8js "^0.8.5"
     matter-js "^0.14.2"
 
 "@p4labs/hardware@file:p4-hardware":
   version "0.0.0"
   dependencies:
-    "@p4labs/elements" "file:../../.cache/yarn/v6/npm-@p4labs-hardware-0.0.0-b08701fa-6820-423a-ba35-87ee1a5eea39-1589119512128/node_modules/@p4labs/p4-elements"
-    avr8js "^0.8.4"
+    "@p4labs/elements" "file:../../.cache/yarn/v6/npm-@p4labs-hardware-0.0.0-9bbf9f07-3d12-406c-8c79-850b452569ae-1589804786057/node_modules/@p4labs/p4-elements"
+    avr8js "^0.8.5"
 
 "@parcel/fs@^1.11.0":
   version "1.11.0"
@@ -1913,7 +1913,7 @@ autolinker@~0.28.0:
   dependencies:
     gulp-header "^1.7.1"
 
-avr8js@^0.8.4:
+avr8js@^0.8.5:
   version "0.8.5"
   resolved "https://registry.yarnpkg.com/avr8js/-/avr8js-0.8.5.tgz#1fd0090094bcfc40c846849713d3495e07b37e69"
   integrity sha512-gCeuY3Gg0NVBM234Cc5hXSLjHlmyFwfZcyJsgqiR7SA3SIakVjxyDuCUZUT7N9KqKzoUtHCCHutns+G82E6WRA==

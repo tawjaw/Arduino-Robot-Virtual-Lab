@@ -6,7 +6,7 @@ export declare class UltrasonicSensor extends Component {
     private startingTimeOfTrigger;
     private startingTimeOfEcho;
     private startingCpuCyclesOfPulse;
-    distanceOfObstacle: number;
+    private distanceOfObstacle;
     constructor(triggerPin: number, echoPin: number, label?: string);
     setDistanceOfObstacle(distance: number): void;
     getEchoPin(): number;

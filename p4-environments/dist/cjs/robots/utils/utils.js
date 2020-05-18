@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.findMinimumDistanceToObstacle = exports.getTranformedPoint = exports.commonExtend = void 0;
 var raycast_es6_1 = require("./raycast_es6");
 //taken from  Matter.js library 
 function commonExtend(obj, deep, options) {

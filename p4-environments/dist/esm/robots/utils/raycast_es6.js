@@ -1,12 +1,25 @@
 "use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
 var __importStar = (this && this.__importStar) || function (mod) {
     if (mod && mod.__esModule) return mod;
     var result = {};
-    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) result[k] = mod[k];
-    result["default"] = mod;
+    if (mod != null) for (var k in mod) if (Object.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.raycast = void 0;
 var Matter = __importStar(require("matter-js"));
 ///
 ///				code by Isaiah Smith
@@ -134,7 +147,7 @@ var ray = /** @class */ (function () {
             //pretty self explanitory
             return this.end.minus(this.start);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ray.prototype, "slope", {
@@ -142,7 +155,7 @@ var ray = /** @class */ (function () {
             var dif = this.difference;
             return dif.y / dif.x;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ray.prototype, "offsetY", {
@@ -152,17 +165,17 @@ var ray = /** @class */ (function () {
             //offsetY = start.y - slope * start.x
             return this.start.y - this.slope * this.start.x;
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ray.prototype, "isHorizontal", {
         get: function () { return compareNum(this.start.y, this.end.y); },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     Object.defineProperty(ray.prototype, "isVertical", {
         get: function () { return compareNum(this.start.x, this.end.x); },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     ray.intersect = function (rayA, rayB) {
@@ -277,7 +290,7 @@ var vec2 = /** @class */ (function () {
             //returns the opposite of this vector
             return this.multiply(-1);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     vec2.prototype.multiply = function (factor) {
@@ -311,7 +324,7 @@ var vec2 = /** @class */ (function () {
             //returns the angle this vector is pointing in radians
             return Math.atan2(this.y, this.x);
         },
-        enumerable: true,
+        enumerable: false,
         configurable: true
     });
     vec2.prototype.distance = function (vec) {

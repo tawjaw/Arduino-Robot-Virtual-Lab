@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.createPartCircle = void 0;
 var matter_js_1 = require("matter-js");
 var utils_1 = require("./utils");
 function createPartCircle(x, y, sides, radius, angleOffset, options) {

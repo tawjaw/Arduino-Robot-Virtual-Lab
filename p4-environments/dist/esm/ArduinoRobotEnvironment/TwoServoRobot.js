@@ -1,11 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.TwoServoRobot = void 0;
 var TwoWheelRobot_1 = require("../robots/TwoWheelRobot");
 var hardware_1 = require("@p4labs/hardware");
 var TwoServoRobot = /** @class */ (function () {
     function TwoServoRobot(canvas, serialOutputElement, timeLabelElement, canvasBackground) {
         var _this = this;
-        if (canvasBackground === void 0) { canvasBackground = "white"; }
+        if (canvasBackground === void 0) { canvasBackground = 'white'; }
         this.arduino = null;
         this.servoLeft = new hardware_1.Servo(9, "leftServo");
         this.servoRight = new hardware_1.Servo(10, "rightServo");
@@ -24,7 +25,7 @@ var TwoServoRobot = /** @class */ (function () {
         this.arduino.addCPUEvent(5, function () {
             var _a;
             var leftServoSpeed = (_this.servoLeft.getWidthOfLastPulse() - 1.4) / 5;
-            var rightServoSpeed = (-1 * (_this.servoRight.getWidthOfLastPulse() - 1.4)) / 5;
+            var rightServoSpeed = -1 * (_this.servoRight.getWidthOfLastPulse() - 1.4) / 5;
             (_a = _this.environment) === null || _a === void 0 ? void 0 : _a.setSpeeds(leftServoSpeed, rightServoSpeed);
             //console.log("Left: ", leftServoSpeed,this.servoLeft.getWidthOfLastPulse(),"\nRight: ", rightServoSpeed, this.servoRight.getWidthOfLastPulse());
         });
@@ -39,16 +40,15 @@ var TwoServoRobot = /** @class */ (function () {
         });
         this.arduino.addCPUEventMicrosecond(5, function (cpuCycles) {
             var _a;
-            if (_this.environment) {
+            if (_this.environment)
                 _this.ultrasonic.setDistanceOfObstacle(_this.environment.ultrasonicSensorDistance);
-            }
             (_a = _this.arduino) === null || _a === void 0 ? void 0 : _a.writeDigitalPin(_this.ultrasonic.getEchoPin(), _this.ultrasonic.getEchoPinState(cpuCycles));
         });
         /*
-            this.arduino.addCPUEvent(1000, () =>{
-               console.log(this.environment?.rightWheelSpeed, this.environment?.leftWheelSpeed);
-            })
-            */
+        this.arduino.addCPUEvent(1000, () =>{
+           console.log(this.environment?.rightWheelSpeed, this.environment?.leftWheelSpeed);
+        })
+        */
     }
     TwoServoRobot.prototype.run = function (hex) {
         var _a, _b, _c;

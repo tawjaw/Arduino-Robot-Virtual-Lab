@@ -21,7 +21,6 @@
   ],
   "devDependencies": {
     "@p4labs/elements": "file:../p4-elements/",
-    "@p4labs/hardware": "file:../p4-hardware/",
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.37",
     "@types/prettier": "^2.0.0",
@@ -59,7 +58,7 @@
     "npm": ">= 5.0.0"
   },
   "dependencies": {
-    "avr8js": "^0.8.4",
+    "avr8js": "^0.8.5",
     "@types/matter-js": "^0.14.2",
     "matter-js": "^0.14.2",
     "@p4labs/hardware": "file:../p4-hardware/"

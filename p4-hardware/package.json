@@ -58,8 +58,7 @@
   },
   "dependencies": {
     "@p4labs/elements": "file:../p4-elements/",
-    "@wokwi/elements": "^0.15.0",
-    "avr8js": "^0.8.4"
+    "avr8js": "^0.8.5"
   },
   "browserslist": [
     "last 1 Chrome versions"
