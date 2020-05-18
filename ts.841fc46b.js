@@ -29389,50 +29389,6 @@ var CPUPerformance = /*#__PURE__*/function () {
 }();
 
 exports.CPUPerformance = CPUPerformance;
-},{}],"../node_modules/@p4labs/hardware/dist/esm/Component.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Component = void 0;
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var Component = /*#__PURE__*/function () {
-  function Component(pin, label) {
-    _classCallCheck(this, Component);
-
-    this.pin = pin;
-    this.label = label;
-    this.pinState = false;
-  }
-
-  _createClass(Component, [{
-    key: "getLabel",
-    value: function getLabel() {
-      return this.label;
-    }
-  }, {
-    key: "getPin",
-    value: function getPin() {
-      return this.pin;
-    }
-  }, {
-    key: "getPinState",
-    value: function getPinState() {
-      return this.pinState;
-    }
-  }]);
-
-  return Component;
-}();
-
-exports.Component = Component;
 },{}],"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js":[function(require,module,exports) {
 "use strict";
 
@@ -29480,27 +29436,9 @@ var _execute = require("./execute");
 
 var _cpuPerformance = require("./cpu-performance");
 
-var _Component2 = require("../Component");
-
 var _formatTime = require("./format-time");
 
 var _avr8js = require("avr8js");
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -29525,7 +29463,6 @@ var ArduinoUno = /*#__PURE__*/function () {
     this.serialOutput = "";
     this.serialOutputElement = null;
     this.arduinoContainer = null;
-    this.unoElement = null;
   }
 
   _createClass(ArduinoUno, [{
@@ -29537,11 +29474,6 @@ var ArduinoUno = /*#__PURE__*/function () {
     key: "setTimeLabelElement",
     value: function setTimeLabelElement(arduinoContainer) {
       this.arduinoContainer = arduinoContainer;
-    }
-  }, {
-    key: "setUnoElement",
-    value: function setUnoElement(arduinoUnoElement) {
-      this.unoElement = arduinoUnoElement;
     }
   }, {
     key: "getSerialOutput",
@@ -29557,10 +29489,10 @@ var ArduinoUno = /*#__PURE__*/function () {
       }; //TODO can we allow multiple components to be connected to the same pin?
 
       /*for(const connection of this.digitalPinConnections)
-          {
-              if(connection.pin === pin)
-                  return false;
-          }*/
+      {
+          if(connection.pin === pin)
+              return false;
+      }*/
 
       this.pinConnections.push(connection);
       return true;
@@ -29617,10 +29549,6 @@ var ArduinoUno = /*#__PURE__*/function () {
 
       this.runner = new _execute.AVRRunner(hex);
       var MHZ = 16000000;
-
-      if (this.unoElement) {
-        this.addConnection(13, new pin13(13, "led", this.unoElement));
-      }
 
       var _iterator2 = _createForOfIteratorHelper(this.cpuEventsMicrosecond),
           _step2;
@@ -29718,37 +29646,51 @@ var ArduinoUno = /*#__PURE__*/function () {
 }();
 
 exports.ArduinoUno = ArduinoUno;
+},{"./execute":"../node_modules/@p4labs/hardware/dist/esm/Uno/execute.js","./cpu-performance":"../node_modules/@p4labs/hardware/dist/esm/Uno/cpu-performance.js","./format-time":"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js","avr8js":"../node_modules/avr8js/dist/esm/index.js"}],"../node_modules/@p4labs/hardware/dist/esm/Component.js":[function(require,module,exports) {
+"use strict";
 
-var pin13 = /*#__PURE__*/function (_Component) {
-  _inherits(pin13, _Component);
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Component = void 0;
 
-  var _super = _createSuper(pin13);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-  function pin13(pin, label, unoElement) {
-    var _this2;
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-    _classCallCheck(this, pin13);
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-    _this2 = _super.call(this, pin, label);
-    _this2.unoElement = unoElement;
-    return _this2;
+var Component = /*#__PURE__*/function () {
+  function Component(pin, label) {
+    _classCallCheck(this, Component);
+
+    this.pin = pin;
+    this.label = label;
+    this.pinState = false;
   }
 
-  _createClass(pin13, [{
-    key: "update",
-    value: function update(pinState, cpuCycles) {
-      this.unoElement.led13 = pinState;
+  _createClass(Component, [{
+    key: "getLabel",
+    value: function getLabel() {
+      return this.label;
     }
   }, {
-    key: "reset",
-    value: function reset() {
-      this.unoElement.led13 = false;
+    key: "getPin",
+    value: function getPin() {
+      return this.pin;
+    }
+  }, {
+    key: "getPinState",
+    value: function getPinState() {
+      return this.pinState;
     }
   }]);
 
-  return pin13;
-}(_Component2.Component);
-},{"./execute":"../node_modules/@p4labs/hardware/dist/esm/Uno/execute.js","./cpu-performance":"../node_modules/@p4labs/hardware/dist/esm/Uno/cpu-performance.js","../Component":"../node_modules/@p4labs/hardware/dist/esm/Component.js","./format-time":"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js","avr8js":"../node_modules/avr8js/dist/esm/index.js"}],"../node_modules/@p4labs/hardware/dist/esm/Servo.js":[function(require,module,exports) {
+  return Component;
+}();
+
+exports.Component = Component;
+},{}],"../node_modules/@p4labs/hardware/dist/esm/Servo.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -29898,7 +29840,7 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
   _createClass(UltrasonicSensor, [{
     key: "setDistanceOfObstacle",
     value: function setDistanceOfObstacle(distance) {
-      if (!this.isTriggered) this.distanceOfObstacle = distance;
+      this.distanceOfObstacle = distance;
     }
   }, {
     key: "getEchoPin",
@@ -29909,21 +29851,21 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
     key: "update",
     value: function update(pinState, cpuCycles) {
       if (pinState) {
-        if (!this.pinState) {
-          //if we are LOW
-          this.startingCpuCyclesOfPulse = cpuCycles;
-        }
+        if (!this.pinState) //if we are LOW 
+          {
+            this.startingCpuCyclesOfPulse = cpuCycles;
+          }
       } else {
         if (this.pinState) {
           var widthOfLastPulse = (0, _formatTime.getMicroSeconds)((cpuCycles - this.startingCpuCyclesOfPulse) / MHZ);
 
-          if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) {
-            //10 micros to triger the echo + 10 error
-            if (!this.echoPinState) {
-              this.isTriggered = true;
-              this.startingTimeOfTrigger = Math.floor(cpuCycles * 1000000 / MHZ);
+          if (widthOfLastPulse >= 10 && widthOfLastPulse <= 20) //10 micros to triger the echo + 10 error
+            {
+              if (!this.echoPinState) {
+                this.isTriggered = true;
+                this.startingTimeOfTrigger = Math.floor(cpuCycles * 1000000 / MHZ);
+              }
             }
-          }
         }
       }
 
@@ -29936,19 +29878,19 @@ var UltrasonicSensor = /*#__PURE__*/function (_Component) {
         var targetDuration = this.distanceOfObstacle * 2 / 0.0343;
         var pulseDuration = Math.floor(cpuCycles * 1000000 / MHZ) - this.startingTimeOfEcho;
 
-        if (pulseDuration >= targetDuration) {
-          //flip the trigger down
-          this.echoPinState = false; //console.log(targetDuration, this.distanceOfObstacle);
-        }
+        if (pulseDuration >= targetDuration) //flip the trigger down 
+          {
+            this.echoPinState = false;
+          }
       } else {
-        if (this.isTriggered && Math.floor(cpuCycles * 1000000 / MHZ) > this.startingTimeOfTrigger + 14) {
-          //wait few milliseconds after the trigger for the echos to be sent
+        if (this.isTriggered && Math.floor(cpuCycles * 1000000 / MHZ) > this.startingTimeOfTrigger + 14) //wait few milliseconds after the trigger for the echos to be sent
           //which gives enough time for pulseIn to get called, as it waits for the moment it turns HIGH
           //if the flip is immidiate, pulseIn will keep on waiting for the pin to go LOW and then HIGH or until it times out
-          this.echoPinState = true;
-          this.startingTimeOfEcho = Math.floor(cpuCycles * 1000000 / MHZ);
-          this.isTriggered = false;
-        }
+          {
+            this.echoPinState = true;
+            this.startingTimeOfEcho = Math.floor(cpuCycles * 1000000 / MHZ);
+            this.isTriggered = false;
+          }
       }
 
       return this.echoPinState;
@@ -30285,7 +30227,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "45679" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63536" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

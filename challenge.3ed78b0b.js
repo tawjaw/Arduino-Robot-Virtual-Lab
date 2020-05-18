@@ -41280,7 +41280,7 @@ Object.defineProperty(exports, "ArduinoIDEContainer", {
 });
 
 var _arduinoIdeContainerElement = require("./arduino-ide-container-element");
-},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/servo.ts":[function(require,module,exports) {
+},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/challenge.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -41426,8 +41426,6 @@ var __generator = this && this.__generator || function (thisArg, body) {
   }
 };
 
-var _a, _b, _c, _d, _e, _f, _g, _h, _j;
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -41440,7 +41438,6 @@ require("@p4labs/elements");
 
 var editor; // eslint-disable-line @typescript-eslint/no-explicit-any
 
-var rotateeditor;
 var simulationStatus = "off";
 
 window.require.config({
@@ -41450,8 +41447,8 @@ window.require.config({
 });
 
 window.require(["vs/editor/editor.main"], function () {
-  editor = monaco.editor.create(document.querySelector("#moveforward-workshop-monaco"), {
-    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n  //move forward fast\n  leftservo.write(170);\n  /*\n    TASK: make the right servo\n    move forward too\n  */\n  \n  delay(3000);  //is this enough time to get all the coins?\n\n  //stop moving\n  leftservo.write(90);\n  rightservo.write(90);\n\n}\n\nvoid loop() {\n\n}\n",
+  editor = monaco.editor.create(document.querySelector("#ultrasonic-workshop-monaco"), {
+    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \nconst int pingPin = 11; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 12; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n   //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n  leftservo.write(90);\n  rightservo.write(90);\n\n}\n\nvoid loop() {\n\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n\n  /*\n    TASK: The coins are around 110 cm away from the top wall.\n    Use the ultrasonic sensor data to navigate the robot in order\n    to collect the coins.\n  */\n\n  delay(50);  \n}\n",
     language: "cpp",
     minimap: {
       enabled: false
@@ -41460,24 +41457,31 @@ window.require(["vs/editor/editor.main"], function () {
   });
 });
 
-var compilerOutputText = document.querySelector("#moveforward-compiler-output-text");
-var serialOutputText = document.querySelector("#moveforward-serial-output-text");
-var arduinoContainer = document.querySelector("#moveforward-workshop-ide-container"); //set up robot environment
+var compilerOutputText = document.querySelector("#ultrasonic-compiler-output-text");
+var serialOutputText = document.querySelector("#ultrasonic-serial-output-text");
+var arduinoContainer = document.querySelector("#ultrasonic-workshop-ide-container"); //set up robot environment
 
-var canvas = document.getElementById("moveforward-world");
+var canvas = document.getElementById("ultrasonic-world");
 var robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, "imgs/room-background.jpg");
+robot.environment.addObstacleRectangle(800, 400, 30, 800);
+robot.environment.addObstacleRectangle(150, 0, 800, 30); //robot.environment.addObstacleRectangle(400, 120, 600, 10);
+//robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
+
+robot.environment.addCoin(200, 120);
+robot.environment.addCoin(300, 120);
+robot.environment.addCoin(400, 120);
+robot.environment.addCoin(500, 120);
+robot.environment.addCoin(700, 200);
+robot.environment.addCoin(700, 300);
+robot.environment.addCoin(700, 400);
+robot.environment.addCoin(700, 500);
+var position = robot.environment.robotInitialPosition;
 robot.environment.robotInitialPosition = {
-  x: 50,
-  y: 300
+  x: position.x,
+  y: position.y + 70
 };
-robot.environment.addObstacleRectangle(0, 400, 20, 800);
-robot.environment.addObstacleRectangle(800, 400, 20, 800);
-robot.environment.addObstacleRectangle(400, 0, 800, 20);
-robot.environment.addObstacleRectangle(400, 800, 800, 20);
-(_a = robot.environment) === null || _a === void 0 ? void 0 : _a.addCoin(250, 300);
-(_b = robot.environment) === null || _b === void 0 ? void 0 : _b.addCoin(450, 300);
-(_c = robot.environment) === null || _c === void 0 ? void 0 : _c.addCoin(650, 300);
 robot.environment.reset();
+robot.environment.tick(10);
 
 function compileAndRun() {
   return __awaiter(this, void 0, void 0, function () {
@@ -41503,6 +41507,12 @@ function compileAndRun() {
               if (arduinoContainer) arduinoContainer.status = "on";
               if (compilerOutputText) compilerOutputText.textContent = "";
               simulationStatus = "on";
+              /* roboty = 200; //Math.floor(Math.random() * (250 - 170 + 1) + 170);
+              robot.environment.robotInitialPosition = { x: 100, y: roboty };
+              //robot.environment.addCoin()
+              console.log(robot.environment.robot.position);
+              robot.environment.reset(); */
+
               robot.run(result.hex);
             } else {
               simulationStatus = "off";
@@ -41551,115 +41561,6 @@ function handleIDEStatusChange(e) {
 
 arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener("_status-change", function (e) {
   return handleIDEStatusChange(e);
-});
-var rotatesimulationStatus = "off";
-
-window.require(["vs/editor/editor.main"], function () {
-  rotateeditor = monaco.editor.create(document.querySelector("#rotate-workshop-monaco"), {
-    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n  //move forward fast\n  leftservo.write(170);\n  \n  delay(3000);\n\n  /*\n    TASK: Get all the coins!\n  */\n  \n  //stop moving\n  leftservo.write(90);\n  rightservo.write(90);\n\n}\n\nvoid loop() {\n\n}\n",
-    language: "cpp",
-    minimap: {
-      enabled: false
-    },
-    automaticLayout: true
-  });
-});
-
-var rotatecompilerOutputText = document.querySelector("#rotate-compiler-output-text");
-var rotateserialOutputText = document.querySelector("#rotate-serial-output-text");
-var rotatearduinoContainer = document.querySelector("#rotate-workshop-ide-container"); //set up robot environment
-
-var rotatecanvas = document.getElementById("rotate-world");
-var rotaterobot = new environments_1.Robots.Arduino.TwoServoRobot(rotatecanvas, rotateserialOutputText, rotatearduinoContainer, "imgs/room-background.jpg");
-rotaterobot.environment.robotInitialPosition = {
-  x: 50,
-  y: 100
-};
-rotaterobot.environment.addObstacleRectangle(0, 400, 20, 800);
-rotaterobot.environment.addObstacleRectangle(800, 400, 20, 800);
-rotaterobot.environment.addObstacleRectangle(400, 0, 800, 20);
-rotaterobot.environment.addObstacleRectangle(400, 800, 800, 20);
-(_d = rotaterobot.environment) === null || _d === void 0 ? void 0 : _d.addCoin(250, 100);
-(_e = rotaterobot.environment) === null || _e === void 0 ? void 0 : _e.addCoin(450, 100);
-(_f = rotaterobot.environment) === null || _f === void 0 ? void 0 : _f.addCoin(650, 100);
-(_g = rotaterobot.environment) === null || _g === void 0 ? void 0 : _g.addCoin(700, 300);
-(_h = rotaterobot.environment) === null || _h === void 0 ? void 0 : _h.addCoin(700, 500);
-(_j = rotaterobot.environment) === null || _j === void 0 ? void 0 : _j.addCoin(700, 700);
-rotaterobot.environment.reset();
-
-function rotatecompileAndRun() {
-  return __awaiter(this, void 0, void 0, function () {
-    var result, err_2;
-    return __generator(this, function (_a) {
-      switch (_a.label) {
-        case 0:
-          console.log("rotate start");
-          if (rotateserialOutputText) rotateserialOutputText.textContent = "";
-          _a.label = 1;
-
-        case 1:
-          _a.trys.push([1, 3,, 4]);
-
-          return [4
-          /*yield*/
-          , compile_1.buildHex(rotateeditor.getModel().getValue())];
-
-        case 2:
-          result = _a.sent();
-
-          if (rotatesimulationStatus === "compiling") {
-            if (result.hex) {
-              if (rotatearduinoContainer) rotatearduinoContainer.status = "on";
-              if (rotatecompilerOutputText) rotatecompilerOutputText.textContent = "";
-              rotatesimulationStatus = "on";
-              rotaterobot.run(result.hex);
-            } else {
-              rotatesimulationStatus = "off";
-              if (rotatearduinoContainer) rotatearduinoContainer.status = "off";
-              if (rotatecompilerOutputText) rotatecompilerOutputText.textContent = result.stderr;
-            }
-          }
-
-          return [3
-          /*break*/
-          , 4];
-
-        case 3:
-          err_2 = _a.sent();
-          rotatesimulationStatus = "off";
-          if (rotatearduinoContainer) rotatearduinoContainer.status = "off";
-          alert("Failed: " + err_2);
-          return [3
-          /*break*/
-          , 4];
-
-        case 4:
-          return [2
-          /*return*/
-          ];
-      }
-    });
-  });
-}
-
-function rotatestopCode() {
-  rotaterobot.stop();
-}
-
-function rotatehandleIDEStatusChange(e) {
-  var status = e.detail.status;
-
-  if (status === "compiling" && rotatesimulationStatus !== "compiling") {
-    rotatecompileAndRun();
-  } else if (status === "off" && rotatesimulationStatus !== "off") {
-    rotatestopCode();
-  }
-
-  rotatesimulationStatus = status;
-}
-
-rotatearduinoContainer === null || rotatearduinoContainer === void 0 ? void 0 : rotatearduinoContainer.addEventListener("_status-change", function (e) {
-  return rotatehandleIDEStatusChange(e);
 });
 },{"@p4labs/environments":"../node_modules/@p4labs/environments/dist/esm/index.js","./compile":"ts/compile.ts","@p4labs/elements":"../node_modules/@p4labs/elements/dist/esm/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
@@ -41865,5 +41766,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/servo.ts"], null)
-//# sourceMappingURL=/servo.d43ff3c4.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/challenge.ts"], null)
+//# sourceMappingURL=/challenge.3ed78b0b.js.map
