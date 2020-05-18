@@ -11142,8 +11142,16 @@ function () {
       self.onCollision(event);
     }); //;
 
-    matter_js_1.Events.on(this._engine, "collisionEnd", function (event) {
-      self.updateUltrasonicSensor();
+    matter_js_1.Events.on(this._engine, 'collisionEnd', function (event) {
+      var pairs = event.pairs;
+      pairs.forEach(function (_a) {
+        var bodyA = _a.bodyA,
+            bodyB = _a.bodyB;
+
+        if (bodyA.label === 'ultrasonic' && bodyB.label === 'obstacle' || bodyB.label === 'ultrasonic' && bodyA.label === 'obstacle') {
+          self.ultrasonicSensorDistance = TwoWheelRobot.maxUltrasonicDistance;
+        }
+      });
     });
     /* //add mouse for testing
         // add mouse control
@@ -11172,7 +11180,7 @@ function () {
       var bodyA = _a.bodyA,
           bodyB = _a.bodyB;
 
-      if (bodyA.label === 'ultrasonic' && bodyB.label === 'obstacle' || bodyB.label === 'ultrasonic' && bodyA.label === 'obstacle') {
+      if (bodyA.label === 'ultrasonic' || bodyB.label === 'ultrasonic') {
         if (_this.robot) {
           _this.updateUltrasonicSensor();
         }
@@ -41600,7 +41608,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63536" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36759" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
