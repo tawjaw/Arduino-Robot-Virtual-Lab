@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.MicroTaskScheduler = void 0;
 class MicroTaskScheduler {
     constructor() {
         this.messageName = 'zero-timeout-message';

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.AVRRunner = void 0;
 const avr8js_1 = require("avr8js");
 const intelhex_1 = require("./intelhex");
 const task_scheduler_1 = require("./task-scheduler");

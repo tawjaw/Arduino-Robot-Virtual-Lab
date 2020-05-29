@@ -1,4 +1,5 @@
 import { Body, Vector } from "matter-js";
+declare type event = (robot: TwoWheelRobot) => any;
 export declare class TwoWheelRobot {
     private _canvas;
     private _engine;
@@ -20,6 +21,7 @@ export declare class TwoWheelRobot {
     leftWheelSpeed: number;
     rightWheelSpeed: number;
     background: string;
+    OnAllCoinsCollectedEvent: event;
     constructor(canvas: any, robotInitialPosition?: Vector, robotInitialAngle?: number, background?: string);
     private onCollision;
     private updateUltrasonicSensor;
@@ -33,3 +35,4 @@ export declare class TwoWheelRobot {
     tick(period: number): void;
     reset(): void;
 }
+export {};

@@ -10,6 +10,7 @@ var TwoWheelRobot = /** @class */ (function () {
         if (robotInitialAngle === void 0) { robotInitialAngle = 0; }
         if (background === void 0) { background = "white"; }
         this.removedCoins = [];
+        this.OnAllCoinsCollectedEvent = null;
         this._canvas = canvas;
         this._engine = matter_js_1.Engine.create();
         this.background = background;
@@ -93,6 +94,7 @@ var TwoWheelRobot = /** @class */ (function () {
         var _this = this;
         var pairs = event.pairs;
         //console.log(pairs);
+        var isLastCoin = false;
         pairs.forEach(function (_a) {
             var bodyA = _a.bodyA, bodyB = _a.bodyB;
             if (bodyA.label === 'ultrasonic' || bodyB.label === 'ultrasonic') {
@@ -103,10 +105,18 @@ var TwoWheelRobot = /** @class */ (function () {
             else if (bodyA.label === 'coin' && bodyB.label !== 'ultrasonic') {
                 matter_js_1.World.remove(_this._engine.world, bodyA);
                 _this.removedCoins.push(bodyA);
+                if (_this.removedCoins.length === _this.coins.length)
+                    isLastCoin = true;
             }
             else if (bodyB.label === 'coin' && bodyA.label !== 'ultrasonic') {
                 matter_js_1.World.remove(_this._engine.world, bodyB);
                 _this.removedCoins.push(bodyB);
+                if (_this.removedCoins.length === _this.coins.length)
+                    isLastCoin = true;
+            }
+            if (isLastCoin && _this.OnAllCoinsCollectedEvent) {
+                console.log("empty");
+                _this.OnAllCoinsCollectedEvent(_this);
             }
         });
     };

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.CPUPerformance = void 0;
 class CPUPerformance {
     constructor(cpu, MHZ) {
         this.cpu = cpu;

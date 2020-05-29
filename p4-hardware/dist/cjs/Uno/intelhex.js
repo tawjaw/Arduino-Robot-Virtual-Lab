@@ -6,6 +6,7 @@
  * Copyright (C) 2019, Uri Shaked
  */
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.loadHex = void 0;
 function loadHex(source, target) {
     for (const line of source.split('\n')) {
         if (line[0] === ':' && line.substr(7, 2) === '00') {

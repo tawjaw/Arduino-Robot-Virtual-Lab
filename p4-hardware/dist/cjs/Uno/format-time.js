@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.getMicroSeconds = exports.getMilliSecconds = exports.formatTime = void 0;
 function zeroPad(value, length) {
     let sval = value.toString();
     while (sval.length < length) {

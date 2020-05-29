@@ -10,7 +10,7 @@ var TwoServoRobot = /** @class */ (function () {
         this.arduino = null;
         this.servoLeft = new hardware_1.Servo(9, "leftServo");
         this.servoRight = new hardware_1.Servo(10, "rightServo");
-        this.ultrasonic = new hardware_1.UltrasonicSensor(11, 12);
+        this.ultrasonic = new hardware_1.UltrasonicSensor(5, 6);
         this.environment = null;
         this.environment = new TwoWheelRobot_1.TwoWheelRobot(canvas, undefined, undefined, canvasBackground);
         this.arduino = new hardware_1.ArduinoUno();
@@ -19,7 +19,7 @@ var TwoServoRobot = /** @class */ (function () {
         //connect the servos
         this.arduino.addConnection(9, this.servoLeft);
         this.arduino.addConnection(10, this.servoRight);
-        this.arduino.addConnection(11, this.ultrasonic);
+        this.arduino.addConnection(5, this.ultrasonic);
         //add arduino events
         //update the wheel speeds from servo components
         this.arduino.addCPUEvent(5, function () {

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Servo = void 0;
 const Component_1 = require("./Component");
 const format_time_1 = require("./Uno/format-time");
 const MHZ = 16000000;

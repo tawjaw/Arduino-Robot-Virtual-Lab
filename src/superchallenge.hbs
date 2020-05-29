@@ -1,0 +1,40 @@
+{{!< base}}
+
+<h1 class="mt-4">Challenge!</h1>
+<p>In the previous challenge you were able to use the feedback from the ultrasonic sensor to navigate the through the environment and collect the coins. However, most of you hardcoded some parts of your strategy, especially when rotating from the top wall to the right wall. </p>
+
+<p>
+  In this challenge, we still have the same requirments but generalized. We have a wall on each 4 sides. Between every two walls there's a gap. Everytime all the coins are collected, <strong>the walls are going to move and a new set of coins will be generated!</strong>
+  The first iteration will start with all gaps between the walls are of equal distance. 
+</p>
+
+
+<div class="alert alert-success" role="alert"
+  style="max-width: 600px; margin-left: auto; margin-right:auto; margin-top:50px;">
+  <h4 class="alert-heading">Instructions</h4>
+
+  <p>Design an algorithm that iterates at least 5 times through this environment, collecting all coins at every iteration. </p>
+
+</div>
+<br><br>
+
+<div class="row" style="margin-bottom: 100px;">
+  <div class="col-md-6 app-container" style="height:600px;">
+    <p4-arduino-ide-container id="ultrasonic-workshop-ide-container">
+      <div class="code-editor" id="ultrasonic-workshop-monaco"></div>
+      <div class="compiler-output">
+        <pre class="compiler-output-text" id="ultrasonic-compiler-output-text"></pre>
+        <pre class="compiler-output-text" id="ultrasonic-serial-output-text"></pre>
+
+      </div>
+    </p4-arduino-ide-container>
+  </div>
+  <div class="col-md-6 text-center" style="min-width:500px; ">
+
+
+    <canvas class="robot-environment" style="max-height:600px; max-width:600px" id="ultrasonic-world"></canvas>
+
+  </div>
+</div>
+<script src="//cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.js"></script>
+<script src="ts/superchallenge.ts"></script>
