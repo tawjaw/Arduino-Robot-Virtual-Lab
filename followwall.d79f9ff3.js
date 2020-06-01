@@ -11072,6 +11072,7 @@ function () {
     }
 
     this.removedCoins = [];
+    this.OnAllCoinsCollectedEvent = null;
     this._canvas = canvas;
     this._engine = matter_js_1.Engine.create();
     this.background = background; //remove gravity
@@ -11176,6 +11177,7 @@ function () {
 
     var pairs = event.pairs; //console.log(pairs);
 
+    var isLastCoin = false;
     pairs.forEach(function (_a) {
       var bodyA = _a.bodyA,
           bodyB = _a.bodyB;
@@ -11188,10 +11190,20 @@ function () {
         matter_js_1.World.remove(_this._engine.world, bodyA);
 
         _this.removedCoins.push(bodyA);
+
+        if (_this.removedCoins.length === _this.coins.length) isLastCoin = true;
       } else if (bodyB.label === 'coin' && bodyA.label !== 'ultrasonic') {
         matter_js_1.World.remove(_this._engine.world, bodyB);
 
         _this.removedCoins.push(bodyB);
+
+        if (_this.removedCoins.length === _this.coins.length) isLastCoin = true;
+      }
+
+      if (isLastCoin && _this.OnAllCoinsCollectedEvent) {
+        console.log("empty");
+
+        _this.OnAllCoinsCollectedEvent(_this);
       }
     });
   };
@@ -11337,7 +11349,9 @@ var CPU = /*#__PURE__*/function () {
     this.progBytes = new Uint8Array(this.progMem.buffer);
     this.readHooks = [];
     this.writeHooks = [];
-    this.pc22Bits = this.progBytes.length > 0x20000;
+    this.pc22Bits = this.progBytes.length > 0x20000; // This lets the Timer Compare output override GPIO pins:
+
+    this.gpioTimerHooks = [];
     this.pc = 0;
     this.cycles = 0;
     this.reset();
@@ -12356,419 +12370,13 @@ function avrInterrupt(cpu, addr) {
   cpu.cycles += 2;
   cpu.pc = addr;
 }
-},{}],"../node_modules/avr8js/dist/esm/peripherals/timer.js":[function(require,module,exports) {
+},{}],"../node_modules/avr8js/dist/esm/peripherals/gpio.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.AVRTimer = exports.timer2Config = exports.timer1Config = exports.timer0Config = void 0;
-
-var _interrupt = require("../cpu/interrupt");
-
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
-function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-var timer01Dividers = {
-  0: 0,
-  1: 1,
-  2: 8,
-  3: 64,
-  4: 256,
-  5: 1024,
-  6: 0,
-  7: 0
-};
-var TOV = 1;
-var OCFA = 2;
-var OCFB = 4;
-var TOIE = 1;
-var OCIEA = 2;
-var OCIEB = 4;
-var timer0Config = {
-  bits: 8,
-  captureInterrupt: 0,
-  compAInterrupt: 0x1c,
-  compBInterrupt: 0x1e,
-  ovfInterrupt: 0x20,
-  TIFR: 0x35,
-  OCRA: 0x47,
-  OCRB: 0x48,
-  ICR: 0,
-  TCNT: 0x46,
-  TCCRA: 0x44,
-  TCCRB: 0x45,
-  TCCRC: 0,
-  TIMSK: 0x6e,
-  dividers: timer01Dividers
-};
-exports.timer0Config = timer0Config;
-var timer1Config = {
-  bits: 16,
-  captureInterrupt: 0x14,
-  compAInterrupt: 0x16,
-  compBInterrupt: 0x18,
-  ovfInterrupt: 0x1a,
-  TIFR: 0x36,
-  OCRA: 0x88,
-  OCRB: 0x8a,
-  ICR: 0x86,
-  TCNT: 0x84,
-  TCCRA: 0x80,
-  TCCRB: 0x81,
-  TCCRC: 0x82,
-  TIMSK: 0x6f,
-  dividers: timer01Dividers
-};
-exports.timer1Config = timer1Config;
-var timer2Config = {
-  bits: 8,
-  captureInterrupt: 0,
-  compAInterrupt: 0x0e,
-  compBInterrupt: 0x10,
-  ovfInterrupt: 0x12,
-  TIFR: 0x37,
-  OCRA: 0xb3,
-  OCRB: 0xb4,
-  ICR: 0,
-  TCNT: 0xb2,
-  TCCRA: 0xb0,
-  TCCRB: 0xb1,
-  TCCRC: 0,
-  TIMSK: 0x70,
-  dividers: {
-    0: 0,
-    1: 1,
-    2: 8,
-    3: 32,
-    4: 64,
-    5: 128,
-    6: 256,
-    7: 1024
-  }
-};
-/* All the following types and constants are related to WGM (Waveform Generation Mode) bits: */
-
-exports.timer2Config = timer2Config;
-var TimerMode;
-
-(function (TimerMode) {
-  TimerMode[TimerMode["Normal"] = 0] = "Normal";
-  TimerMode[TimerMode["PWMPhaseCorrect"] = 1] = "PWMPhaseCorrect";
-  TimerMode[TimerMode["CTC"] = 2] = "CTC";
-  TimerMode[TimerMode["FastPWM"] = 3] = "FastPWM";
-  TimerMode[TimerMode["PWMPhaseFrequencyCorrect"] = 4] = "PWMPhaseFrequencyCorrect";
-  TimerMode[TimerMode["Reserved"] = 5] = "Reserved";
-})(TimerMode || (TimerMode = {}));
-
-var TOVUpdateMode;
-
-(function (TOVUpdateMode) {
-  TOVUpdateMode[TOVUpdateMode["Max"] = 0] = "Max";
-  TOVUpdateMode[TOVUpdateMode["Top"] = 1] = "Top";
-  TOVUpdateMode[TOVUpdateMode["Bottom"] = 2] = "Bottom";
-})(TOVUpdateMode || (TOVUpdateMode = {}));
-
-var OCRUpdateMode;
-
-(function (OCRUpdateMode) {
-  OCRUpdateMode[OCRUpdateMode["Immediate"] = 0] = "Immediate";
-  OCRUpdateMode[OCRUpdateMode["Top"] = 1] = "Top";
-  OCRUpdateMode[OCRUpdateMode["Bottom"] = 2] = "Bottom";
-})(OCRUpdateMode || (OCRUpdateMode = {}));
-
-var TopOCRA = 1;
-var TopICR = 2;
-var wgmModes8Bit = [
-/*0*/
-[TimerMode.Normal, 0xff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*1*/
-[TimerMode.PWMPhaseCorrect, 0xff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
-/*2*/
-[TimerMode.CTC, TopOCRA, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*3*/
-[TimerMode.FastPWM, 0xff, OCRUpdateMode.Bottom, TOVUpdateMode.Max],
-/*4*/
-[TimerMode.Reserved, 0xff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*5*/
-[TimerMode.PWMPhaseCorrect, TopOCRA, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
-/*6*/
-[TimerMode.Reserved, 0xff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*7*/
-[TimerMode.FastPWM, TopOCRA, OCRUpdateMode.Bottom, TOVUpdateMode.Top]]; // Table 16-4 in the datasheet
-
-var wgmModes16Bit = [
-/*0 */
-[TimerMode.Normal, 0xffff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*1 */
-[TimerMode.PWMPhaseCorrect, 0x00ff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
-/*2 */
-[TimerMode.PWMPhaseCorrect, 0x01ff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
-/*3 */
-[TimerMode.PWMPhaseCorrect, 0x03ff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
-/*4 */
-[TimerMode.CTC, TopOCRA, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*5 */
-[TimerMode.FastPWM, 0x00ff, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
-/*6 */
-[TimerMode.FastPWM, 0x01ff, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
-/*7 */
-[TimerMode.FastPWM, 0x03ff, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
-/*8 */
-[TimerMode.PWMPhaseFrequencyCorrect, TopICR, OCRUpdateMode.Bottom, TOVUpdateMode.Bottom],
-/*9 */
-[TimerMode.PWMPhaseFrequencyCorrect, TopOCRA, OCRUpdateMode.Bottom, TOVUpdateMode.Bottom],
-/*10*/
-[TimerMode.PWMPhaseCorrect, TopICR, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
-/*11*/
-[TimerMode.PWMPhaseCorrect, TopOCRA, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
-/*12*/
-[TimerMode.CTC, TopICR, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*13*/
-[TimerMode.Reserved, 0xffff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
-/*14*/
-[TimerMode.FastPWM, TopICR, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
-/*15*/
-[TimerMode.FastPWM, TopOCRA, OCRUpdateMode.Bottom, TOVUpdateMode.Top]];
-
-var AVRTimer = /*#__PURE__*/function () {
-  function AVRTimer(cpu, config) {
-    var _this = this;
-
-    _classCallCheck(this, AVRTimer);
-
-    this.cpu = cpu;
-    this.config = config;
-    this.lastCycle = 0;
-    this.ocrA = 0;
-    this.ocrB = 0;
-    this.tcnt = 0;
-    this.tcntUpdated = false;
-    this.updateWGMConfig();
-
-    this.cpu.readHooks[config.TCNT] = function (addr) {
-      _this.tick();
-
-      if (_this.config.bits === 16) {
-        _this.cpu.data[addr + 1] = _this.tcnt >> 8;
-      }
-
-      return _this.cpu.data[addr] = _this.tcnt & 0xff;
-    };
-
-    this.cpu.writeHooks[config.TCNT] = function (value) {
-      var highByte = _this.config.bits === 16 ? _this.cpu.data[config.TCNT + 1] : 0;
-      _this.tcnt = highByte << 8 | value;
-      _this.tcntUpdated = true;
-
-      _this.timerUpdated();
-    };
-
-    this.registerHook(config.OCRA, function (value) {
-      // TODO implement buffering when timer running in PWM mode
-      _this.ocrA = value;
-    });
-    this.registerHook(config.OCRB, function (value) {
-      _this.ocrB = value;
-    });
-
-    cpu.writeHooks[config.TCCRA] = function (value) {
-      _this.cpu.data[config.TCCRA] = value;
-
-      _this.updateWGMConfig();
-
-      return true;
-    };
-
-    cpu.writeHooks[config.TCCRB] = function (value) {
-      _this.cpu.data[config.TCCRB] = value;
-
-      _this.updateWGMConfig();
-
-      return true;
-    };
-  }
-
-  _createClass(AVRTimer, [{
-    key: "reset",
-    value: function reset() {
-      this.lastCycle = 0;
-      this.ocrA = 0;
-      this.ocrB = 0;
-    }
-  }, {
-    key: "registerHook",
-    value: function registerHook(address, hook) {
-      var _this2 = this;
-
-      if (this.config.bits === 16) {
-        this.cpu.writeHooks[address] = function (value) {
-          return hook(_this2.cpu.data[address + 1] << 8 | value);
-        };
-
-        this.cpu.writeHooks[address + 1] = function (value) {
-          return hook(value << 8 | _this2.cpu.data[address]);
-        };
-      } else {
-        this.cpu.writeHooks[address] = hook;
-      }
-    }
-  }, {
-    key: "updateWGMConfig",
-    value: function updateWGMConfig() {
-      var wgmModes = this.config.bits === 16 ? wgmModes16Bit : wgmModes8Bit;
-
-      var _wgmModes$this$WGM = _slicedToArray(wgmModes[this.WGM], 2),
-          timerMode = _wgmModes$this$WGM[0],
-          topValue = _wgmModes$this$WGM[1];
-
-      this.timerMode = timerMode;
-      this.topValue = topValue;
-    }
-  }, {
-    key: "tick",
-    value: function tick() {
-      var divider = this.config.dividers[this.CS];
-      var delta = this.cpu.cycles - this.lastCycle;
-
-      if (divider && delta >= divider) {
-        var counterDelta = Math.floor(delta / divider);
-        this.lastCycle += counterDelta * divider;
-        var val = this.tcnt;
-        var newVal = (val + counterDelta) % (this.TOP + 1); // A CPU write overrides (has priority over) all counter clear or count operations.
-
-        if (!this.tcntUpdated) {
-          this.tcnt = newVal;
-          this.timerUpdated();
-        }
-
-        var timerMode = this.timerMode;
-
-        if ((timerMode === TimerMode.Normal || timerMode === TimerMode.PWMPhaseCorrect || timerMode === TimerMode.PWMPhaseFrequencyCorrect || timerMode === TimerMode.FastPWM) && val > newVal) {
-          this.TIFR |= TOV;
-        }
-      }
-
-      this.tcntUpdated = false;
-
-      if (this.cpu.interruptsEnabled) {
-        if (this.TIFR & TOV && this.TIMSK & TOIE) {
-          (0, _interrupt.avrInterrupt)(this.cpu, this.config.ovfInterrupt);
-          this.TIFR &= ~TOV;
-        }
-
-        if (this.TIFR & OCFA && this.TIMSK & OCIEA) {
-          (0, _interrupt.avrInterrupt)(this.cpu, this.config.compAInterrupt);
-          this.TIFR &= ~OCFA;
-        }
-
-        if (this.TIFR & OCFB && this.TIMSK & OCIEB) {
-          (0, _interrupt.avrInterrupt)(this.cpu, this.config.compBInterrupt);
-          this.TIFR &= ~OCFB;
-        }
-      }
-    }
-  }, {
-    key: "timerUpdated",
-    value: function timerUpdated() {
-      var value = this.tcnt;
-
-      if (this.ocrA && value === this.ocrA) {
-        this.TIFR |= OCFA;
-
-        if (this.timerMode === TimerMode.CTC) {
-          // Clear Timer on Compare Match (CTC) Mode
-          this.tcnt = 0;
-          this.TIFR |= TOV;
-        }
-      }
-
-      if (this.ocrB && value === this.ocrB) {
-        this.TIFR |= OCFB;
-      }
-    }
-  }, {
-    key: "TIFR",
-    get: function get() {
-      return this.cpu.data[this.config.TIFR];
-    },
-    set: function set(value) {
-      this.cpu.data[this.config.TIFR] = value;
-    }
-  }, {
-    key: "TCCRA",
-    get: function get() {
-      return this.cpu.data[this.config.TCCRA];
-    }
-  }, {
-    key: "TCCRB",
-    get: function get() {
-      return this.cpu.data[this.config.TCCRB];
-    }
-  }, {
-    key: "TIMSK",
-    get: function get() {
-      return this.cpu.data[this.config.TIMSK];
-    }
-  }, {
-    key: "ICR",
-    get: function get() {
-      // Only available for 16-bit timers
-      return this.cpu.data[this.config.ICR + 1] << 8 | this.cpu.data[this.config.ICR];
-    }
-  }, {
-    key: "CS",
-    get: function get() {
-      return this.TCCRB & 0x7;
-    }
-  }, {
-    key: "WGM",
-    get: function get() {
-      var mask = this.config.bits === 16 ? 0x18 : 0x8;
-      return (this.TCCRB & mask) >> 1 | this.TCCRA & 0x3;
-    }
-  }, {
-    key: "TOP",
-    get: function get() {
-      switch (this.topValue) {
-        case TopOCRA:
-          return this.ocrA;
-
-        case TopICR:
-          return this.ICR;
-
-        default:
-          return this.topValue;
-      }
-    }
-  }]);
-
-  return AVRTimer;
-}();
-
-exports.AVRTimer = AVRTimer;
-},{"../cpu/interrupt":"../node_modules/avr8js/dist/esm/cpu/interrupt.js"}],"../node_modules/avr8js/dist/esm/peripherals/gpio.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.AVRIOPort = exports.PinState = exports.portLConfig = exports.portKConfig = exports.portJConfig = exports.portHConfig = exports.portGConfig = exports.portFConfig = exports.portEConfig = exports.portDConfig = exports.portCConfig = exports.portBConfig = exports.portAConfig = void 0;
+exports.AVRIOPort = exports.PinOverrideMode = exports.PinState = exports.portLConfig = exports.portKConfig = exports.portJConfig = exports.portHConfig = exports.portGConfig = exports.portFConfig = exports.portEConfig = exports.portDConfig = exports.portCConfig = exports.portBConfig = exports.portAConfig = void 0;
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -12857,6 +12465,19 @@ exports.PinState = PinState;
   PinState[PinState["Input"] = 2] = "Input";
   PinState[PinState["InputPullUp"] = 3] = "InputPullUp";
 })(PinState || (exports.PinState = PinState = {}));
+/* This mechanism allows timers to override specific GPIO pins */
+
+
+var PinOverrideMode;
+exports.PinOverrideMode = PinOverrideMode;
+
+(function (PinOverrideMode) {
+  PinOverrideMode[PinOverrideMode["None"] = 0] = "None";
+  PinOverrideMode[PinOverrideMode["Enable"] = 1] = "Enable";
+  PinOverrideMode[PinOverrideMode["Set"] = 2] = "Set";
+  PinOverrideMode[PinOverrideMode["Clear"] = 3] = "Clear";
+  PinOverrideMode[PinOverrideMode["Toggle"] = 4] = "Toggle";
+})(PinOverrideMode || (exports.PinOverrideMode = PinOverrideMode = {}));
 
 var AVRIOPort = /*#__PURE__*/function () {
   function AVRIOPort(cpu, portConfig) {
@@ -12867,20 +12488,29 @@ var AVRIOPort = /*#__PURE__*/function () {
     this.cpu = cpu;
     this.portConfig = portConfig;
     this.listeners = [];
+    this.pinValue = 0;
+    this.overrideMask = 0xff;
+    this.lastValue = 0;
+    this.lastDdr = 0;
 
-    cpu.writeHooks[portConfig.DDR] = function (value, oldValue) {
+    cpu.writeHooks[portConfig.DDR] = function (value) {
       var portValue = cpu.data[portConfig.PORT];
+      cpu.data[portConfig.DDR] = value;
 
-      _this.writeGpio(value & portValue, oldValue & oldValue);
+      _this.updatePinRegister(portValue, value);
+
+      _this.writeGpio(portValue, value);
+
+      return true;
     };
 
-    cpu.writeHooks[portConfig.PORT] = function (value, oldValue) {
+    cpu.writeHooks[portConfig.PORT] = function (value) {
       var ddrMask = cpu.data[portConfig.DDR];
       cpu.data[portConfig.PORT] = value;
-      value &= ddrMask;
-      cpu.data[portConfig.PIN] = cpu.data[portConfig.PIN] & ~ddrMask | value;
 
-      _this.writeGpio(value, oldValue & ddrMask);
+      _this.updatePinRegister(value, ddrMask);
+
+      _this.writeGpio(value, ddrMask);
 
       return true;
     };
@@ -12893,9 +12523,41 @@ var AVRIOPort = /*#__PURE__*/function () {
       cpu.data[portConfig.PORT] = portValue;
       cpu.data[portConfig.PIN] = cpu.data[portConfig.PIN] & ~ddrMask | portValue & ddrMask;
 
-      _this.writeGpio(portValue & ddrMask, oldPortValue & ddrMask);
+      _this.writeGpio(portValue, ddrMask);
 
       return true;
+    }; // The following hook is used by the timer compare output to override GPIO pins:
+
+
+    cpu.gpioTimerHooks[portConfig.PORT] = function (pin, mode) {
+      var pinMask = 1 << pin;
+
+      if (mode == PinOverrideMode.None) {
+        _this.overrideMask |= pinMask;
+      } else {
+        _this.overrideMask &= ~pinMask;
+
+        switch (mode) {
+          case PinOverrideMode.Enable:
+            _this.overrideValue &= ~pinMask;
+            _this.overrideValue |= cpu.data[portConfig.PORT] & pinMask;
+            break;
+
+          case PinOverrideMode.Set:
+            _this.overrideValue |= pinMask;
+            break;
+
+          case PinOverrideMode.Clear:
+            _this.overrideValue &= ~pinMask;
+            break;
+
+          case PinOverrideMode.Toggle:
+            _this.overrideValue ^= pinMask;
+            break;
+        }
+      }
+
+      _this.writeGpio(cpu.data[portConfig.PORT], cpu.data[portConfig.DDR]);
     };
   }
 
@@ -12928,26 +12590,56 @@ var AVRIOPort = /*#__PURE__*/function () {
       var bitMask = 1 << index;
 
       if (ddr & bitMask) {
-        return port & bitMask ? PinState.High : PinState.Low;
+        return this.lastValue & bitMask ? PinState.High : PinState.Low;
       } else {
         return port & bitMask ? PinState.InputPullUp : PinState.Input;
       }
     }
+    /**
+     * Sets the input value for the given pin. This is the value that
+     * will be returned when reading from the PIN register.
+     */
+
+  }, {
+    key: "setPin",
+    value: function setPin(index, value) {
+      var bitMask = 1 << index;
+      this.pinValue &= ~bitMask;
+
+      if (value) {
+        this.pinValue |= bitMask;
+      }
+
+      this.updatePinRegister(this.cpu.data[this.portConfig.PORT], this.cpu.data[this.portConfig.DDR]);
+    }
+  }, {
+    key: "updatePinRegister",
+    value: function updatePinRegister(port, ddr) {
+      this.cpu.data[this.portConfig.PIN] = this.pinValue & ~ddr | port & ddr;
+    }
   }, {
     key: "writeGpio",
-    value: function writeGpio(value, oldValue) {
-      var _iterator = _createForOfIteratorHelper(this.listeners),
-          _step;
+    value: function writeGpio(value, ddr) {
+      var newValue = (value & this.overrideMask | this.overrideValue) & ddr;
+      var prevValue = this.lastValue;
 
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var listener = _step.value;
-          listener(value, oldValue);
+      if (newValue !== prevValue || ddr !== this.lastDdr) {
+        this.lastValue = newValue;
+        this.lastDdr = ddr;
+
+        var _iterator = _createForOfIteratorHelper(this.listeners),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var listener = _step.value;
+            listener(newValue, prevValue);
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
         }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
       }
     }
   }]);
@@ -12956,7 +12648,535 @@ var AVRIOPort = /*#__PURE__*/function () {
 }();
 
 exports.AVRIOPort = AVRIOPort;
-},{}],"../node_modules/avr8js/dist/esm/peripherals/usart.js":[function(require,module,exports) {
+},{}],"../node_modules/avr8js/dist/esm/peripherals/timer.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.AVRTimer = exports.timer2Config = exports.timer1Config = exports.timer0Config = void 0;
+
+var _interrupt = require("../cpu/interrupt");
+
+var _gpio = require("./gpio");
+
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var timer01Dividers = {
+  0: 0,
+  1: 1,
+  2: 8,
+  3: 64,
+  4: 256,
+  5: 1024,
+  6: 0,
+  7: 0
+};
+var TOV = 1;
+var OCFA = 2;
+var OCFB = 4;
+var TOIE = 1;
+var OCIEA = 2;
+var OCIEB = 4;
+var timer0Config = {
+  bits: 8,
+  captureInterrupt: 0,
+  compAInterrupt: 0x1c,
+  compBInterrupt: 0x1e,
+  ovfInterrupt: 0x20,
+  TIFR: 0x35,
+  OCRA: 0x47,
+  OCRB: 0x48,
+  ICR: 0,
+  TCNT: 0x46,
+  TCCRA: 0x44,
+  TCCRB: 0x45,
+  TCCRC: 0,
+  TIMSK: 0x6e,
+  dividers: timer01Dividers,
+  compPortA: _gpio.portDConfig.PORT,
+  compPinA: 6,
+  compPortB: _gpio.portDConfig.PORT,
+  compPinB: 5
+};
+exports.timer0Config = timer0Config;
+var timer1Config = {
+  bits: 16,
+  captureInterrupt: 0x14,
+  compAInterrupt: 0x16,
+  compBInterrupt: 0x18,
+  ovfInterrupt: 0x1a,
+  TIFR: 0x36,
+  OCRA: 0x88,
+  OCRB: 0x8a,
+  ICR: 0x86,
+  TCNT: 0x84,
+  TCCRA: 0x80,
+  TCCRB: 0x81,
+  TCCRC: 0x82,
+  TIMSK: 0x6f,
+  dividers: timer01Dividers,
+  compPortA: _gpio.portBConfig.PORT,
+  compPinA: 1,
+  compPortB: _gpio.portBConfig.PORT,
+  compPinB: 2
+};
+exports.timer1Config = timer1Config;
+var timer2Config = {
+  bits: 8,
+  captureInterrupt: 0,
+  compAInterrupt: 0x0e,
+  compBInterrupt: 0x10,
+  ovfInterrupt: 0x12,
+  TIFR: 0x37,
+  OCRA: 0xb3,
+  OCRB: 0xb4,
+  ICR: 0,
+  TCNT: 0xb2,
+  TCCRA: 0xb0,
+  TCCRB: 0xb1,
+  TCCRC: 0,
+  TIMSK: 0x70,
+  dividers: {
+    0: 0,
+    1: 1,
+    2: 8,
+    3: 32,
+    4: 64,
+    5: 128,
+    6: 256,
+    7: 1024
+  },
+  compPortA: _gpio.portBConfig.PORT,
+  compPinA: 3,
+  compPortB: _gpio.portDConfig.PORT,
+  compPinB: 3
+};
+/* All the following types and constants are related to WGM (Waveform Generation Mode) bits: */
+
+exports.timer2Config = timer2Config;
+var TimerMode;
+
+(function (TimerMode) {
+  TimerMode[TimerMode["Normal"] = 0] = "Normal";
+  TimerMode[TimerMode["PWMPhaseCorrect"] = 1] = "PWMPhaseCorrect";
+  TimerMode[TimerMode["CTC"] = 2] = "CTC";
+  TimerMode[TimerMode["FastPWM"] = 3] = "FastPWM";
+  TimerMode[TimerMode["PWMPhaseFrequencyCorrect"] = 4] = "PWMPhaseFrequencyCorrect";
+  TimerMode[TimerMode["Reserved"] = 5] = "Reserved";
+})(TimerMode || (TimerMode = {}));
+
+var TOVUpdateMode;
+
+(function (TOVUpdateMode) {
+  TOVUpdateMode[TOVUpdateMode["Max"] = 0] = "Max";
+  TOVUpdateMode[TOVUpdateMode["Top"] = 1] = "Top";
+  TOVUpdateMode[TOVUpdateMode["Bottom"] = 2] = "Bottom";
+})(TOVUpdateMode || (TOVUpdateMode = {}));
+
+var OCRUpdateMode;
+
+(function (OCRUpdateMode) {
+  OCRUpdateMode[OCRUpdateMode["Immediate"] = 0] = "Immediate";
+  OCRUpdateMode[OCRUpdateMode["Top"] = 1] = "Top";
+  OCRUpdateMode[OCRUpdateMode["Bottom"] = 2] = "Bottom";
+})(OCRUpdateMode || (OCRUpdateMode = {}));
+
+var TopOCRA = 1;
+var TopICR = 2;
+var wgmModes8Bit = [
+/*0*/
+[TimerMode.Normal, 0xff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*1*/
+[TimerMode.PWMPhaseCorrect, 0xff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
+/*2*/
+[TimerMode.CTC, TopOCRA, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*3*/
+[TimerMode.FastPWM, 0xff, OCRUpdateMode.Bottom, TOVUpdateMode.Max],
+/*4*/
+[TimerMode.Reserved, 0xff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*5*/
+[TimerMode.PWMPhaseCorrect, TopOCRA, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
+/*6*/
+[TimerMode.Reserved, 0xff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*7*/
+[TimerMode.FastPWM, TopOCRA, OCRUpdateMode.Bottom, TOVUpdateMode.Top]]; // Table 16-4 in the datasheet
+
+var wgmModes16Bit = [
+/*0 */
+[TimerMode.Normal, 0xffff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*1 */
+[TimerMode.PWMPhaseCorrect, 0x00ff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
+/*2 */
+[TimerMode.PWMPhaseCorrect, 0x01ff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
+/*3 */
+[TimerMode.PWMPhaseCorrect, 0x03ff, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
+/*4 */
+[TimerMode.CTC, TopOCRA, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*5 */
+[TimerMode.FastPWM, 0x00ff, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
+/*6 */
+[TimerMode.FastPWM, 0x01ff, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
+/*7 */
+[TimerMode.FastPWM, 0x03ff, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
+/*8 */
+[TimerMode.PWMPhaseFrequencyCorrect, TopICR, OCRUpdateMode.Bottom, TOVUpdateMode.Bottom],
+/*9 */
+[TimerMode.PWMPhaseFrequencyCorrect, TopOCRA, OCRUpdateMode.Bottom, TOVUpdateMode.Bottom],
+/*10*/
+[TimerMode.PWMPhaseCorrect, TopICR, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
+/*11*/
+[TimerMode.PWMPhaseCorrect, TopOCRA, OCRUpdateMode.Top, TOVUpdateMode.Bottom],
+/*12*/
+[TimerMode.CTC, TopICR, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*13*/
+[TimerMode.Reserved, 0xffff, OCRUpdateMode.Immediate, TOVUpdateMode.Max],
+/*14*/
+[TimerMode.FastPWM, TopICR, OCRUpdateMode.Bottom, TOVUpdateMode.Top],
+/*15*/
+[TimerMode.FastPWM, TopOCRA, OCRUpdateMode.Bottom, TOVUpdateMode.Top]];
+
+function compToOverride(comp) {
+  switch (comp) {
+    case 1:
+      return _gpio.PinOverrideMode.Toggle;
+
+    case 2:
+      return _gpio.PinOverrideMode.Clear;
+
+    case 3:
+      return _gpio.PinOverrideMode.Set;
+
+    default:
+      return _gpio.PinOverrideMode.Enable;
+  }
+}
+
+var AVRTimer = /*#__PURE__*/function () {
+  function AVRTimer(cpu, config) {
+    var _this = this;
+
+    _classCallCheck(this, AVRTimer);
+
+    this.cpu = cpu;
+    this.config = config;
+    this.lastCycle = 0;
+    this.ocrA = 0;
+    this.ocrB = 0;
+    this.icr = 0; // only for 16-bit timers
+
+    this.tcnt = 0;
+    this.tcntUpdated = false;
+    this.countingUp = true; // This is the temporary register used to access 16-bit registers (section 16.3 of the datasheet)
+
+    this.highByteTemp = 0;
+    this.updateWGMConfig();
+
+    this.cpu.readHooks[config.TCNT] = function (addr) {
+      _this.tick();
+
+      if (_this.config.bits === 16) {
+        _this.cpu.data[addr + 1] = _this.tcnt >> 8;
+      }
+
+      return _this.cpu.data[addr] = _this.tcnt & 0xff;
+    };
+
+    this.cpu.writeHooks[config.TCNT] = function (value) {
+      _this.tcnt = _this.highByteTemp << 8 | value;
+      _this.tcntUpdated = true;
+
+      _this.timerUpdated();
+    };
+
+    this.cpu.writeHooks[config.OCRA] = function (value) {
+      // TODO implement buffering when timer running in PWM mode
+      _this.ocrA = _this.highByteTemp << 8 | value;
+    };
+
+    this.cpu.writeHooks[config.OCRB] = function (value) {
+      // TODO implement buffering when timer running in PWM mode
+      _this.ocrB = _this.highByteTemp << 8 | value;
+    };
+
+    this.cpu.writeHooks[config.ICR] = function (value) {
+      _this.icr = _this.highByteTemp << 8 | value;
+    };
+
+    if (this.config.bits === 16) {
+      var updateTempRegister = function updateTempRegister(value) {
+        _this.highByteTemp = value;
+      };
+
+      this.cpu.writeHooks[config.TCNT + 1] = updateTempRegister;
+      this.cpu.writeHooks[config.OCRA + 1] = updateTempRegister;
+      this.cpu.writeHooks[config.OCRB + 1] = updateTempRegister;
+      this.cpu.writeHooks[config.ICR + 1] = updateTempRegister;
+    }
+
+    cpu.writeHooks[config.TCCRA] = function (value) {
+      _this.cpu.data[config.TCCRA] = value;
+      _this.compA = value >> 6 & 0x3;
+
+      _this.updateCompA(_this.compA ? _gpio.PinOverrideMode.Enable : _gpio.PinOverrideMode.None);
+
+      _this.compB = value >> 4 & 0x3;
+
+      _this.updateCompB(_this.compB ? _gpio.PinOverrideMode.Enable : _gpio.PinOverrideMode.None);
+
+      _this.updateWGMConfig();
+
+      return true;
+    };
+
+    cpu.writeHooks[config.TCCRB] = function (value) {
+      _this.cpu.data[config.TCCRB] = value;
+
+      _this.updateWGMConfig();
+
+      return true;
+    };
+  }
+
+  _createClass(AVRTimer, [{
+    key: "reset",
+    value: function reset() {
+      this.lastCycle = 0;
+      this.ocrA = 0;
+      this.ocrB = 0;
+    }
+  }, {
+    key: "updateWGMConfig",
+    value: function updateWGMConfig() {
+      var wgmModes = this.config.bits === 16 ? wgmModes16Bit : wgmModes8Bit;
+
+      var _wgmModes$this$WGM = _slicedToArray(wgmModes[this.WGM], 2),
+          timerMode = _wgmModes$this$WGM[0],
+          topValue = _wgmModes$this$WGM[1];
+
+      this.timerMode = timerMode;
+      this.topValue = topValue;
+    }
+  }, {
+    key: "tick",
+    value: function tick() {
+      var divider = this.config.dividers[this.CS];
+      var delta = this.cpu.cycles - this.lastCycle;
+
+      if (divider && delta >= divider) {
+        var counterDelta = Math.floor(delta / divider);
+        this.lastCycle += counterDelta * divider;
+        var val = this.tcnt;
+        var timerMode = this.timerMode;
+        var phasePwm = timerMode === TimerMode.PWMPhaseCorrect || timerMode === TimerMode.PWMPhaseFrequencyCorrect;
+        var newVal = phasePwm ? this.phasePwmCount(val, counterDelta) : (val + counterDelta) % (this.TOP + 1); // A CPU write overrides (has priority over) all counter clear or count operations.
+
+        if (!this.tcntUpdated) {
+          this.tcnt = newVal;
+          this.timerUpdated();
+        }
+
+        if ((timerMode === TimerMode.Normal || timerMode === TimerMode.FastPWM) && val > newVal) {
+          this.TIFR |= TOV;
+        }
+      }
+
+      this.tcntUpdated = false;
+
+      if (this.cpu.interruptsEnabled) {
+        var TIFR = this.TIFR,
+            TIMSK = this.TIMSK;
+
+        if (TIFR & TOV && TIMSK & TOIE) {
+          (0, _interrupt.avrInterrupt)(this.cpu, this.config.ovfInterrupt);
+          this.TIFR &= ~TOV;
+        }
+
+        if (TIFR & OCFA && TIMSK & OCIEA) {
+          (0, _interrupt.avrInterrupt)(this.cpu, this.config.compAInterrupt);
+          this.TIFR &= ~OCFA;
+        }
+
+        if (TIFR & OCFB && TIMSK & OCIEB) {
+          (0, _interrupt.avrInterrupt)(this.cpu, this.config.compBInterrupt);
+          this.TIFR &= ~OCFB;
+        }
+      }
+    }
+  }, {
+    key: "phasePwmCount",
+    value: function phasePwmCount(value, delta) {
+      while (delta > 0) {
+        if (this.countingUp) {
+          value++;
+
+          if (value === this.TOP && !this.tcntUpdated) {
+            this.countingUp = false;
+          }
+        } else {
+          value--;
+
+          if (!value && !this.tcntUpdated) {
+            this.countingUp = true;
+            this.TIFR |= TOV;
+          }
+        }
+
+        delta--;
+      }
+
+      return value;
+    }
+  }, {
+    key: "timerUpdated",
+    value: function timerUpdated() {
+      var value = this.tcnt;
+
+      if (this.ocrA && value === this.ocrA) {
+        this.TIFR |= OCFA;
+
+        if (this.timerMode === TimerMode.CTC) {
+          // Clear Timer on Compare Match (CTC) Mode
+          this.tcnt = 0;
+          this.TIFR |= TOV;
+        }
+
+        if (this.compA) {
+          this.updateCompPin(this.compA, 'A');
+        }
+      }
+
+      if (this.ocrB && value === this.ocrB) {
+        this.TIFR |= OCFB;
+
+        if (this.compB) {
+          this.updateCompPin(this.compB, 'B');
+        }
+      }
+    }
+  }, {
+    key: "updateCompPin",
+    value: function updateCompPin(compValue, pinName) {
+      var newValue = _gpio.PinOverrideMode.None;
+      var inverted = compValue === 3;
+      var isSet = this.countingUp === inverted;
+
+      switch (this.timerMode) {
+        case TimerMode.Normal:
+        case TimerMode.CTC:
+        case TimerMode.FastPWM:
+          newValue = compToOverride(compValue);
+          break;
+
+        case TimerMode.PWMPhaseCorrect:
+        case TimerMode.PWMPhaseFrequencyCorrect:
+          newValue = isSet ? _gpio.PinOverrideMode.Set : _gpio.PinOverrideMode.Clear;
+          break;
+      }
+
+      if (newValue !== _gpio.PinOverrideMode.None) {
+        if (pinName === 'A') {
+          this.updateCompA(newValue);
+        } else {
+          this.updateCompB(newValue);
+        }
+      }
+    }
+  }, {
+    key: "updateCompA",
+    value: function updateCompA(value) {
+      var _this$config = this.config,
+          compPortA = _this$config.compPortA,
+          compPinA = _this$config.compPinA;
+      var hook = this.cpu.gpioTimerHooks[compPortA];
+
+      if (hook) {
+        hook(compPinA, value, compPortA);
+      }
+    }
+  }, {
+    key: "updateCompB",
+    value: function updateCompB(value) {
+      var _this$config2 = this.config,
+          compPortB = _this$config2.compPortB,
+          compPinB = _this$config2.compPinB;
+      var hook = this.cpu.gpioTimerHooks[compPortB];
+
+      if (hook) {
+        hook(compPinB, value, compPortB);
+      }
+    }
+  }, {
+    key: "TIFR",
+    get: function get() {
+      return this.cpu.data[this.config.TIFR];
+    },
+    set: function set(value) {
+      this.cpu.data[this.config.TIFR] = value;
+    }
+  }, {
+    key: "TCCRA",
+    get: function get() {
+      return this.cpu.data[this.config.TCCRA];
+    }
+  }, {
+    key: "TCCRB",
+    get: function get() {
+      return this.cpu.data[this.config.TCCRB];
+    }
+  }, {
+    key: "TIMSK",
+    get: function get() {
+      return this.cpu.data[this.config.TIMSK];
+    }
+  }, {
+    key: "CS",
+    get: function get() {
+      return this.TCCRB & 0x7;
+    }
+  }, {
+    key: "WGM",
+    get: function get() {
+      var mask = this.config.bits === 16 ? 0x18 : 0x8;
+      return (this.TCCRB & mask) >> 1 | this.TCCRA & 0x3;
+    }
+  }, {
+    key: "TOP",
+    get: function get() {
+      switch (this.topValue) {
+        case TopOCRA:
+          return this.ocrA;
+
+        case TopICR:
+          return this.icr;
+
+        default:
+          return this.topValue;
+      }
+    }
+  }]);
+
+  return AVRTimer;
+}();
+
+exports.AVRTimer = AVRTimer;
+},{"../cpu/interrupt":"../node_modules/avr8js/dist/esm/cpu/interrupt.js","./gpio":"../node_modules/avr8js/dist/esm/peripherals/gpio.js"}],"../node_modules/avr8js/dist/esm/peripherals/usart.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -13888,6 +14108,50 @@ var CPUPerformance = /*#__PURE__*/function () {
 }();
 
 exports.CPUPerformance = CPUPerformance;
+},{}],"../node_modules/@p4labs/hardware/dist/esm/Component.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Component = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Component = /*#__PURE__*/function () {
+  function Component(pin, label) {
+    _classCallCheck(this, Component);
+
+    this.pin = pin;
+    this.label = label;
+    this.pinState = false;
+  }
+
+  _createClass(Component, [{
+    key: "getLabel",
+    value: function getLabel() {
+      return this.label;
+    }
+  }, {
+    key: "getPin",
+    value: function getPin() {
+      return this.pin;
+    }
+  }, {
+    key: "getPinState",
+    value: function getPinState() {
+      return this.pinState;
+    }
+  }]);
+
+  return Component;
+}();
+
+exports.Component = Component;
 },{}],"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js":[function(require,module,exports) {
 "use strict";
 
@@ -13935,9 +14199,27 @@ var _execute = require("./execute");
 
 var _cpuPerformance = require("./cpu-performance");
 
+var _Component2 = require("../Component");
+
 var _formatTime = require("./format-time");
 
 var _avr8js = require("avr8js");
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function () { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
 function _createForOfIteratorHelper(o) { if (typeof Symbol === "undefined" || o[Symbol.iterator] == null) { if (Array.isArray(o) || (o = _unsupportedIterableToArray(o))) { var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var it, normalCompletion = true, didErr = false, err; return { s: function s() { it = o[Symbol.iterator](); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it.return != null) it.return(); } finally { if (didErr) throw err; } } }; }
 
@@ -13962,6 +14244,7 @@ var ArduinoUno = /*#__PURE__*/function () {
     this.serialOutput = "";
     this.serialOutputElement = null;
     this.arduinoContainer = null;
+    this.unoElement = null;
   }
 
   _createClass(ArduinoUno, [{
@@ -13973,6 +14256,11 @@ var ArduinoUno = /*#__PURE__*/function () {
     key: "setTimeLabelElement",
     value: function setTimeLabelElement(arduinoContainer) {
       this.arduinoContainer = arduinoContainer;
+    }
+  }, {
+    key: "setUnoElement",
+    value: function setUnoElement(arduinoUnoElement) {
+      this.unoElement = arduinoUnoElement;
     }
   }, {
     key: "getSerialOutput",
@@ -13988,10 +14276,10 @@ var ArduinoUno = /*#__PURE__*/function () {
       }; //TODO can we allow multiple components to be connected to the same pin?
 
       /*for(const connection of this.digitalPinConnections)
-      {
-          if(connection.pin === pin)
-              return false;
-      }*/
+              {
+                  if(connection.pin === pin)
+                      return false;
+              }*/
 
       this.pinConnections.push(connection);
       return true;
@@ -14048,6 +14336,10 @@ var ArduinoUno = /*#__PURE__*/function () {
 
       this.runner = new _execute.AVRRunner(hex);
       var MHZ = 16000000;
+
+      if (this.unoElement) {
+        this.addConnection(13, new pin13(13, "led", this.unoElement));
+      }
 
       var _iterator2 = _createForOfIteratorHelper(this.cpuEventsMicrosecond),
           _step2;
@@ -14145,51 +14437,37 @@ var ArduinoUno = /*#__PURE__*/function () {
 }();
 
 exports.ArduinoUno = ArduinoUno;
-},{"./execute":"../node_modules/@p4labs/hardware/dist/esm/Uno/execute.js","./cpu-performance":"../node_modules/@p4labs/hardware/dist/esm/Uno/cpu-performance.js","./format-time":"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js","avr8js":"../node_modules/avr8js/dist/esm/index.js"}],"../node_modules/@p4labs/hardware/dist/esm/Component.js":[function(require,module,exports) {
-"use strict";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Component = void 0;
+var pin13 = /*#__PURE__*/function (_Component) {
+  _inherits(pin13, _Component);
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+  var _super = _createSuper(pin13);
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+  function pin13(pin, label, unoElement) {
+    var _this2;
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+    _classCallCheck(this, pin13);
 
-var Component = /*#__PURE__*/function () {
-  function Component(pin, label) {
-    _classCallCheck(this, Component);
-
-    this.pin = pin;
-    this.label = label;
-    this.pinState = false;
+    _this2 = _super.call(this, pin, label);
+    _this2.unoElement = unoElement;
+    return _this2;
   }
 
-  _createClass(Component, [{
-    key: "getLabel",
-    value: function getLabel() {
-      return this.label;
+  _createClass(pin13, [{
+    key: "update",
+    value: function update(pinState, cpuCycles) {
+      this.unoElement.led13 = pinState;
     }
   }, {
-    key: "getPin",
-    value: function getPin() {
-      return this.pin;
-    }
-  }, {
-    key: "getPinState",
-    value: function getPinState() {
-      return this.pinState;
+    key: "reset",
+    value: function reset() {
+      this.unoElement.led13 = false;
     }
   }]);
 
-  return Component;
-}();
-
-exports.Component = Component;
-},{}],"../node_modules/@p4labs/hardware/dist/esm/Servo.js":[function(require,module,exports) {
+  return pin13;
+}(_Component2.Component);
+},{"./execute":"../node_modules/@p4labs/hardware/dist/esm/Uno/execute.js","./cpu-performance":"../node_modules/@p4labs/hardware/dist/esm/Uno/cpu-performance.js","../Component":"../node_modules/@p4labs/hardware/dist/esm/Component.js","./format-time":"../node_modules/@p4labs/hardware/dist/esm/Uno/format-time.js","avr8js":"../node_modules/avr8js/dist/esm/index.js"}],"../node_modules/@p4labs/hardware/dist/esm/Servo.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -14464,7 +14742,7 @@ function () {
     this.arduino = null;
     this.servoLeft = new hardware_1.Servo(9, "leftServo");
     this.servoRight = new hardware_1.Servo(10, "rightServo");
-    this.ultrasonic = new hardware_1.UltrasonicSensor(11, 12);
+    this.ultrasonic = new hardware_1.UltrasonicSensor(5, 6);
     this.environment = null;
     this.environment = new TwoWheelRobot_1.TwoWheelRobot(canvas, undefined, undefined, canvasBackground);
     this.arduino = new hardware_1.ArduinoUno();
@@ -14473,7 +14751,7 @@ function () {
 
     this.arduino.addConnection(9, this.servoLeft);
     this.arduino.addConnection(10, this.servoRight);
-    this.arduino.addConnection(11, this.ultrasonic); //add arduino events
+    this.arduino.addConnection(5, this.ultrasonic); //add arduino events
     //update the wheel speeds from servo components
 
     this.arduino.addCPUEvent(5, function () {
@@ -41531,7 +41809,7 @@ window.require.config({
 
 window.require(["vs/editor/editor.main"], function () {
   editor = monaco.editor.create(document.querySelector("#ultrasonic-workshop-monaco"), {
-    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \nconst int pingPin = 11; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 12; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n   //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n  leftservo.write(90);\n  rightservo.write(90);\n\n}\n\nvoid loop() {\n\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n\n  /*\n    TASK: The coins are around 110 cm away from the top wall.\n    Use the ultrasonic sensor data to navigate the robot in order\n    to collect the coins.\n  */\n\n  delay(50);  \n}\n",
+    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \nconst int pingPin = 5; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 6; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n   //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n  leftservo.write(90);\n  rightservo.write(90);\n\n}\n\nvoid loop() {\n\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n\n  /*\n    TASK: The coins are around 110 cm away from the top wall.\n    Use the ultrasonic sensor data to navigate the robot in order\n    to collect the coins.\n  */\n\n  delay(50);  \n}\n",
     language: "cpp",
     minimap: {
       enabled: false
@@ -41674,7 +41952,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "36759" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50857" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

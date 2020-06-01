@@ -41566,7 +41566,7 @@ Object.defineProperty(exports, "ArduinoIDEContainer", {
 });
 
 var _arduinoIdeContainerElement = require("./arduino-ide-container-element");
-},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/challenge.ts":[function(require,module,exports) {
+},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/superchallenge.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -41769,6 +41769,15 @@ robot.environment.robotInitialPosition = {
 robot.environment.reset();
 robot.environment.tick(10);
 
+robot.environment.OnAllCoinsCollectedEvent = function (env) {
+  /*   env.coins = [];
+  env.removedCoins = []; */
+  env.obstacles = [];
+  env.addObstacleRectangle(800, 400, 30, 800);
+  env.addObstacleRectangle(Math.floor(Math.random() * (250 - 100 + 1) + 100), 0, 800, 30);
+  env.reset();
+};
+
 function compileAndRun() {
   return __awaiter(this, void 0, void 0, function () {
     var result, err_1;
@@ -41848,6 +41857,23 @@ function handleIDEStatusChange(e) {
 arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener("_status-change", function (e) {
   return handleIDEStatusChange(e);
 });
+/* $(document).keypress(function (e) {
+  const key = e.which;
+  if (key == 97) {
+    robot.environment.setSpeeds(-16, 16);
+    robot.environment.applyForces();
+  }
+  else if (key == 100)
+  {
+    robot.environment.setSpeeds(16, -16);
+    robot.environment.applyForces();
+  }
+  else if (key == 119)
+  {
+    robot.environment.setSpeeds(16, 16);
+    robot.environment.applyForces();
+  }
+}); */
 },{"@p4labs/environments":"../node_modules/@p4labs/environments/dist/esm/index.js","./compile":"ts/compile.ts","@p4labs/elements":"../node_modules/@p4labs/elements/dist/esm/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -42052,5 +42078,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/challenge.ts"], null)
-//# sourceMappingURL=/challenge.3ed78b0b.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/superchallenge.ts"], null)
+//# sourceMappingURL=/superchallenge.937dde20.js.map
