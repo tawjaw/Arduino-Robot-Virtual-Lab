@@ -22,8 +22,8 @@ window.require(["vs/editor/editor.main"], () => {
 
 Servo leftservo;  
 Servo rightservo;  
-const int pingPin = 11; // Trigger Pin of Ultrasonic Sensor
-const int echoPin = 12; // Echo Pin of Ultrasonic Sensor
+const int pingPin = 5; // Trigger Pin of Ultrasonic Sensor
+const int echoPin = 6; // Echo Pin of Ultrasonic Sensor
 
 void setup() {
   leftservo.attach(9);  

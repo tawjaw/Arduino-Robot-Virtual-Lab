@@ -18,8 +18,8 @@ window.require(["vs/editor/editor.main"], () => {
   editor = monaco.editor.create(
     document.querySelector("#ultrasonic-workshop-monaco"),
     {
-      value: `const int pingPin = 11; // Trigger Pin of Ultrasonic Sensor
-const int echoPin = 12; // Echo Pin of Ultrasonic Sensor
+      value: `const int pingPin = 5; // Trigger Pin of Ultrasonic Sensor
+const int echoPin = 6; // Echo Pin of Ultrasonic Sensor
 
 void setup() {
   //set up the Serial

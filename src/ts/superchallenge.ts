@@ -23,8 +23,8 @@ window.require(["vs/editor/editor.main"], () => {
 
 Servo leftservo;  
 Servo rightservo;  
-const int pingPin = 11; // Trigger Pin of Ultrasonic Sensor
-const int echoPin = 12; // Echo Pin of Ultrasonic Sensor
+const int pingPin = 5; // Trigger Pin of Ultrasonic Sensor
+const int echoPin = 6; // Echo Pin of Ultrasonic Sensor
 
 void setup() {
   leftservo.attach(9);  
@@ -113,7 +113,7 @@ robot.environment.reset();
 robot.environment.tick(10);
 
 robot.environment.OnAllCoinsCollectedEvent = (env) => {
-/*   env.coins = [];
+  /*   env.coins = [];
   env.removedCoins = []; */
   env.obstacles = [];
   env.addObstacleRectangle(800, 400, 30, 800);
@@ -123,9 +123,8 @@ robot.environment.OnAllCoinsCollectedEvent = (env) => {
     800,
     30
   );
-  
-  env.reset();
 
+  env.reset();
 };
 async function compileAndRun() {
   if (serialOutputText) serialOutputText.textContent = "";
