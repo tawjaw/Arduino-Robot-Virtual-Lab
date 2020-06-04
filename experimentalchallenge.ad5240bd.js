@@ -41566,7 +41566,7 @@ Object.defineProperty(exports, "ArduinoIDEContainer", {
 });
 
 var _arduinoIdeContainerElement = require("./arduino-ide-container-element");
-},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/ultrasonic.ts":[function(require,module,exports) {
+},{"./arduino-ide-container-element":"../node_modules/@p4labs/elements/dist/esm/arduino-ide-container-element.js"}],"ts/experimentalchallenge.ts":[function(require,module,exports) {
 "use strict";
 
 var __awaiter = this && this.__awaiter || function (thisArg, _arguments, P, generator) {
@@ -41734,7 +41734,7 @@ window.require.config({
 
 window.require(["vs/editor/editor.main"], function () {
   editor = monaco.editor.create(document.querySelector("#ultrasonic-workshop-monaco"), {
-    value: "const int pingPin = 5; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 6; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n}\n\nvoid loop() {\n  //create a variable to save the duration in\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n  Serial.println(duration);\n\n  /*\n    TASK: Find the distance in cm at \n          every robot position.\n  */\n  delay(1000);\n}\n",
+    value: "#include <Servo.h>\n\nServo leftservo;  \nServo rightservo;  \nconst int pingPin = 5; // Trigger Pin of Ultrasonic Sensor\nconst int echoPin = 6; // Echo Pin of Ultrasonic Sensor\n\nvoid setup() {\n  leftservo.attach(9);  \n  rightservo.attach(10);\n  \n   //set up the Serial\n  Serial.begin(9600);\n  //setupt the pin modes  \n  pinMode(pingPin, OUTPUT);\n  pinMode(echoPin, INPUT);\n\n  leftservo.write(90);\n  rightservo.write(90);\n\n}\n\nvoid loop() {\n\n  long duration;  \n  //clear the ping pin\n  digitalWrite(pingPin, LOW);\n  delayMicroseconds(2);\n  //send the 10 microsecond trigger\n  digitalWrite(pingPin, HIGH);\n  delayMicroseconds(10);\n  digitalWrite(pingPin, LOW);\n  //get the pulse duration in microseconds\n  duration = pulseIn(echoPin, HIGH);\n\n  /*\n    TASK: The coins are around 110 cm away from the top wall.\n    Use the ultrasonic sensor data to navigate the robot in order\n    to collect the coins.\n  */\n\n  delay(50);  \n}\n",
     language: "cpp",
     minimap: {
       enabled: false
@@ -41749,16 +41749,34 @@ var arduinoContainer = document.querySelector("#ultrasonic-workshop-ide-containe
 
 var canvas = document.getElementById("ultrasonic-world");
 var robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, "imgs/room-background.jpg");
+robot.environment.addObstacleRectangle(800, 400, 30, 800);
+robot.environment.addObstacleRectangle(150, 0, 800, 30); //robot.environment.addObstacleRectangle(400, 120, 600, 10);
+//robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
+
+robot.environment.addCoin(200, 120);
+robot.environment.addCoin(300, 120);
+robot.environment.addCoin(400, 120);
+robot.environment.addCoin(500, 120);
+robot.environment.addCoin(700, 200);
+robot.environment.addCoin(700, 300);
+robot.environment.addCoin(700, 400);
+robot.environment.addCoin(700, 500);
+var position = robot.environment.robotInitialPosition;
 robot.environment.robotInitialPosition = {
-  x: 350,
-  y: 200
+  x: position.x,
+  y: position.y + 70
 };
-robot.environment.addObstacleRectangle(0, 400, 20, 800);
-robot.environment.addObstacleRectangle(800, 400, 20, 800);
-robot.environment.addObstacleRectangle(400, 0, 800, 20);
-robot.environment.addObstacleRectangle(400, 800, 800, 20);
-robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
 robot.environment.reset();
+robot.environment.tick(10);
+
+robot.environment.OnAllCoinsCollectedEvent = function (env) {
+  /*   env.coins = [];
+  env.removedCoins = []; */
+  env.obstacles = [];
+  env.addObstacleRectangle(800, 400, 30, 800);
+  env.addObstacleRectangle(Math.floor(Math.random() * (250 - 100 + 1) + 100), 0, 800, 30);
+  env.reset();
+};
 
 function compileAndRun() {
   return __awaiter(this, void 0, void 0, function () {
@@ -41784,6 +41802,12 @@ function compileAndRun() {
               if (arduinoContainer) arduinoContainer.status = "on";
               if (compilerOutputText) compilerOutputText.textContent = "";
               simulationStatus = "on";
+              /* roboty = 200; //Math.floor(Math.random() * (250 - 170 + 1) + 170);
+              robot.environment.robotInitialPosition = { x: 100, y: roboty };
+              //robot.environment.addCoin()
+              console.log(robot.environment.robot.position);
+              robot.environment.reset(); */
+
               robot.run(result.hex);
             } else {
               simulationStatus = "off";
@@ -41832,32 +41856,24 @@ function handleIDEStatusChange(e) {
 
 arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener("_status-change", function (e) {
   return handleIDEStatusChange(e);
-}); //set up the buttons
-
-var btnPositin1 = document.querySelector("#position1");
-btnPositin1.addEventListener("click", function () {
-  robot.environment.setRobotPosition({
-    x: 350,
-    y: 200
-  });
-  console.log("hello");
 });
-var btnPositin2 = document.querySelector("#position2");
-btnPositin2.addEventListener("click", function () {
-  robot.environment.setRobotPosition({
-    x: 350,
-    y: 250
-  });
-  console.log("hello");
-});
-var btnPositin3 = document.querySelector("#position3");
-btnPositin3.addEventListener("click", function () {
-  robot.environment.setRobotPosition({
-    x: 350,
-    y: 300
-  });
-  console.log("hello");
-});
+/* $(document).keypress(function (e) {
+  const key = e.which;
+  if (key == 97) {
+    robot.environment.setSpeeds(-16, 16);
+    robot.environment.applyForces();
+  }
+  else if (key == 100)
+  {
+    robot.environment.setSpeeds(16, -16);
+    robot.environment.applyForces();
+  }
+  else if (key == 119)
+  {
+    robot.environment.setSpeeds(16, 16);
+    robot.environment.applyForces();
+  }
+}); */
 },{"@p4labs/environments":"../node_modules/@p4labs/environments/dist/esm/index.js","./compile":"ts/compile.ts","@p4labs/elements":"../node_modules/@p4labs/elements/dist/esm/index.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -42062,5 +42078,5 @@ function hmrAcceptRun(bundle, id) {
     return true;
   }
 }
-},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/ultrasonic.ts"], null)
-//# sourceMappingURL=/ultrasonic.f7c1b502.js.map
+},{}]},{},["../node_modules/parcel-bundler/src/builtins/hmr-runtime.js","ts/experimentalchallenge.ts"], null)
+//# sourceMappingURL=/experimentalchallenge.ad5240bd.js.map

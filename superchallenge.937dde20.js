@@ -41769,15 +41769,6 @@ robot.environment.robotInitialPosition = {
 robot.environment.reset();
 robot.environment.tick(10);
 
-robot.environment.OnAllCoinsCollectedEvent = function (env) {
-  /*   env.coins = [];
-  env.removedCoins = []; */
-  env.obstacles = [];
-  env.addObstacleRectangle(800, 400, 30, 800);
-  env.addObstacleRectangle(Math.floor(Math.random() * (250 - 100 + 1) + 100), 0, 800, 30);
-  env.reset();
-};
-
 function compileAndRun() {
   return __awaiter(this, void 0, void 0, function () {
     var result, err_1;
@@ -41856,6 +41847,81 @@ function handleIDEStatusChange(e) {
 
 arduinoContainer === null || arduinoContainer === void 0 ? void 0 : arduinoContainer.addEventListener("_status-change", function (e) {
   return handleIDEStatusChange(e);
+}); //set up the buttons
+
+var btnPositin1 = document.querySelector("#position1");
+btnPositin1.addEventListener("click", function () {
+  robot.stop();
+  robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, "imgs/room-background.jpg");
+  robot.environment.addObstacleRectangle(800, 400, 30, 800);
+  robot.environment.addObstacleRectangle(150, 0, 800, 30); //robot.environment.addObstacleRectangle(400, 120, 600, 10);
+  //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
+
+  robot.environment.addCoin(200, 120);
+  robot.environment.addCoin(300, 120);
+  robot.environment.addCoin(400, 120);
+  robot.environment.addCoin(500, 120);
+  robot.environment.addCoin(700, 200);
+  robot.environment.addCoin(700, 300);
+  robot.environment.addCoin(700, 400);
+  robot.environment.addCoin(700, 500);
+  var position = robot.environment.robotInitialPosition;
+  robot.environment.robotInitialPosition = {
+    x: position.x,
+    y: position.y + 70
+  };
+  robot.environment.reset();
+  robot.environment.tick(10);
+  if (arduinoContainer) arduinoContainer.status = "off";
+});
+var btnPositin2 = document.querySelector("#position2");
+btnPositin2.addEventListener("click", function () {
+  robot.stop();
+  robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, "imgs/room-background.jpg");
+  robot.environment.addObstacleRectangle(800, 400, 30, 800);
+  robot.environment.addObstacleRectangle(200, 0, 800, 30); //robot.environment.addObstacleRectangle(400, 120, 600, 10);
+  //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
+
+  robot.environment.addCoin(200, 120);
+  robot.environment.addCoin(300, 120);
+  robot.environment.addCoin(400, 120);
+  robot.environment.addCoin(500, 120);
+  robot.environment.addCoin(700, 200);
+  robot.environment.addCoin(700, 300);
+  robot.environment.addCoin(700, 400);
+  robot.environment.addCoin(700, 500);
+  var position = robot.environment.robotInitialPosition;
+  robot.environment.robotInitialPosition = {
+    x: position.x,
+    y: position.y + 70
+  };
+  robot.environment.reset();
+  robot.environment.tick(10);
+  if (arduinoContainer) arduinoContainer.status = "off";
+});
+var btnPositin3 = document.querySelector("#position3");
+btnPositin3.addEventListener("click", function () {
+  robot.stop();
+  robot = new environments_1.Robots.Arduino.TwoServoRobot(canvas, serialOutputText, arduinoContainer, "imgs/room-background.jpg");
+  robot.environment.addObstacleRectangle(800, 400, 30, 800);
+  robot.environment.addObstacleRectangle(50, 0, 800, 30); //robot.environment.addObstacleRectangle(400, 120, 600, 10);
+  //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
+
+  robot.environment.addCoin(200, 120);
+  robot.environment.addCoin(300, 120);
+  robot.environment.addCoin(400, 120);
+  robot.environment.addCoin(700, 200);
+  robot.environment.addCoin(700, 300);
+  robot.environment.addCoin(700, 400);
+  robot.environment.addCoin(700, 500);
+  var position = robot.environment.robotInitialPosition;
+  robot.environment.robotInitialPosition = {
+    x: position.x,
+    y: position.y + 70
+  };
+  robot.environment.reset();
+  robot.environment.tick(10);
+  if (arduinoContainer) arduinoContainer.status = "off";
 });
 /* $(document).keypress(function (e) {
   const key = e.which;
@@ -41902,7 +41968,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "50857" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63894" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
