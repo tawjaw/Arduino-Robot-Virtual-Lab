@@ -6,7 +6,7 @@
 </p>
 
 <p>
-  In this super challenge, we have the same requirements with one change to the environment. There are 3 different environments with a small modification; the gap between the two walls has a different distance. 
+  In this super challenge, we have the same requirements with one change to the environment. Every time the coins are collected, the top wall shifts either to the left or the right by some random amount, changing the distance of the gap between the two walls. Once all the coins are collected, the robot will automatically reset its position.
   For the class challenge the focus was on optimizing your strategy for time. In this super challenge the focus shifts to the principle of generalizablity. See if you can design an algorithm that generalizes.
 </p>
 
@@ -15,7 +15,9 @@
   style="max-width: 600px; margin-left: auto; margin-right:auto; margin-top:50px;">
   <h4 class="alert-heading">Instructions</h4>
 
-  <p>Design <strong>ONE</strong> algorithm only that can collect all the coins in all three environemnts.  </p>
+  <p>Design an algorithm that cycles at least 3 times through this environment, collecting all coins at each cycle.
+    Your strategy should generalize an approach to turning from the top wall to the right wall regardless of the distance of the
+    gap. </p>
 
 </div>
 <br><br>
@@ -35,12 +37,8 @@
 
 
     <canvas class="robot-environment" style="max-height:600px; max-width:600px" id="ultrasonic-world"></canvas>
-<div class="row">
-      <div class="col-md-4 text-center"><button class="btn btn-primary" id="position1">Environment 1</button></div>
-      <div class="col-md-4 text-center"><button class="btn btn-primary" id="position2">Environment 2</button></div>
-      <div class="col-md-4 text-center"><button class="btn btn-primary" id="position3">Environment 3</button></div>
-    </div>
+
   </div>
 </div>
 <script src="//cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.20.0/min/vs/loader.js"></script>
-<script src="ts/superchallenge.ts"></script>
+<script src="ts/experimentalchallenge.ts"></script>

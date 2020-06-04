@@ -84,7 +84,7 @@ const arduinoContainer = document.querySelector<ArduinoIDEContainer>(
 //set up robot environment
 const canvas = document.getElementById("ultrasonic-world");
 
-let robot = new Robots.Arduino.TwoServoRobot(
+const robot = new Robots.Arduino.TwoServoRobot(
   canvas,
   serialOutputText,
   arduinoContainer,
@@ -112,6 +112,20 @@ robot.environment.robotInitialPosition = { x: position.x, y: position.y + 70 };
 robot.environment.reset();
 robot.environment.tick(10);
 
+robot.environment.OnAllCoinsCollectedEvent = (env) => {
+  /*   env.coins = [];
+  env.removedCoins = []; */
+  env.obstacles = [];
+  env.addObstacleRectangle(800, 400, 30, 800);
+  env.addObstacleRectangle(
+    Math.floor(Math.random() * (250 - 100 + 1) + 100),
+    0,
+    800,
+    30
+  );
+
+  env.reset();
+};
 async function compileAndRun() {
   if (serialOutputText) serialOutputText.textContent = "";
   try {
@@ -159,117 +173,6 @@ function handleIDEStatusChange(e: CustomEvent) {
 arduinoContainer?.addEventListener("_status-change", (e: CustomEvent) =>
   handleIDEStatusChange(e)
 );
-
-//set up the buttons
-const btnPositin1 = document.querySelector("#position1");
-btnPositin1.addEventListener("click", () => {
-  robot.stop();
-  robot = new Robots.Arduino.TwoServoRobot(
-    canvas,
-    serialOutputText,
-    arduinoContainer,
-    "imgs/room-background.jpg"
-  );
-
-  robot.environment.addObstacleRectangle(800, 400, 30, 800);
-  robot.environment.addObstacleRectangle(150, 0, 800, 30);
-
-  //robot.environment.addObstacleRectangle(400, 120, 600, 10);
-
-  //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
-  robot.environment.addCoin(200, 120);
-  robot.environment.addCoin(300, 120);
-  robot.environment.addCoin(400, 120);
-  robot.environment.addCoin(500, 120);
-
-  robot.environment.addCoin(700, 200);
-  robot.environment.addCoin(700, 300);
-  robot.environment.addCoin(700, 400);
-  robot.environment.addCoin(700, 500);
-
-  const position = robot.environment.robotInitialPosition;
-  robot.environment.robotInitialPosition = {
-    x: position.x,
-    y: position.y + 70,
-  };
-  robot.environment.reset();
-  robot.environment.tick(10);
-  if (arduinoContainer) arduinoContainer.status = "off";
-
-});
-
-const btnPositin2 = document.querySelector("#position2");
-btnPositin2.addEventListener("click", () => {
-  robot.stop();
-  robot = new Robots.Arduino.TwoServoRobot(
-    canvas,
-    serialOutputText,
-    arduinoContainer,
-    "imgs/room-background.jpg"
-  );
-
-  robot.environment.addObstacleRectangle(800, 400, 30, 800);
-  robot.environment.addObstacleRectangle(200, 0, 800, 30);
-
-  //robot.environment.addObstacleRectangle(400, 120, 600, 10);
-
-  //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
-  robot.environment.addCoin(200, 120);
-  robot.environment.addCoin(300, 120);
-  robot.environment.addCoin(400, 120);
-  robot.environment.addCoin(500, 120);
-
-  robot.environment.addCoin(700, 200);
-  robot.environment.addCoin(700, 300);
-  robot.environment.addCoin(700, 400);
-  robot.environment.addCoin(700, 500);
-
-  const position = robot.environment.robotInitialPosition;
-  robot.environment.robotInitialPosition = {
-    x: position.x,
-    y: position.y + 70,
-  };
-  robot.environment.reset();
-  robot.environment.tick(10);
-  if (arduinoContainer) arduinoContainer.status = "off";
-
-});
-
-const btnPositin3 = document.querySelector("#position3");
-btnPositin3.addEventListener("click", () => {
-  robot.stop();
-  robot = new Robots.Arduino.TwoServoRobot(
-    canvas,
-    serialOutputText,
-    arduinoContainer,
-    "imgs/room-background.jpg"
-  );
-
-  robot.environment.addObstacleRectangle(800, 400, 30, 800);
-  robot.environment.addObstacleRectangle(50, 0, 800, 30);
-
-  //robot.environment.addObstacleRectangle(400, 120, 600, 10);
-
-  //robot.environment.addObstacleRectangle(400, 100, 300, 100, "#3CAEA3");
-  robot.environment.addCoin(200, 120);
-  robot.environment.addCoin(300, 120);
-  robot.environment.addCoin(400, 120);
-
-  robot.environment.addCoin(700, 200);
-  robot.environment.addCoin(700, 300);
-  robot.environment.addCoin(700, 400);
-  robot.environment.addCoin(700, 500);
-
-  const position = robot.environment.robotInitialPosition;
-  robot.environment.robotInitialPosition = {
-    x: position.x,
-    y: position.y + 70,
-  };
-  robot.environment.reset();
-  robot.environment.tick(10);
-  if (arduinoContainer) arduinoContainer.status = "off";
-
-});
 
 /* $(document).keypress(function (e) {
   const key = e.which;
